@@ -10,6 +10,8 @@
         "react/prop-types": "warn",
         "react/sort-prop-types": "warn",
         "react/no-unused-prop-types": "warn",
-        "no-undef": "warn"
+        "no-undef": "warn",
+        "no-shadow": "warn",
+        "no-unused-vars": "warn"
     }
 }
