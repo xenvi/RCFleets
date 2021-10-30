@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     Container,
@@ -19,7 +19,7 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import { login } from '../actions/auth';
 
-const Login = ({ login }) => {
+const Login = ({ login, isAuthenticated }) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -29,14 +29,17 @@ const Login = ({ login }) => {
 
     const { email, password } = formData;
 
-    const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
     const onSubmit = (e) => {
         e.preventDefault();
-
         login(email, password);
     };
 
-    // is user authenticated? redirect to homepage
+    if (isAuthenticated) {
+        return <Redirect to="/" />;
+    }
 
     return (
         <Container maxW="container.sm" p="6">
@@ -47,11 +50,23 @@ const Login = ({ login }) => {
                 <form onSubmit={(e) => onSubmit(e)}>
                     <Stack spacing={3}>
                         <FormControl id="email" isRequired>
-                            <Input type="email" placeholder="Email" onChange={(e) => onChange(e)} />
+                            <Input
+                              type="email"
+                              name="email"
+                              value={email}
+                              placeholder="Email"
+                              onChange={(e) => onChange(e)}
+                            />
                         </FormControl>
                         <FormControl id="password" isRequired>
                             <InputGroup size="md">
-                                <Input placeholder="Password" type={show ? 'text' : 'password'} onChange={(e) => onChange(e)} />
+                                <Input
+                                  type={show ? 'text' : 'password'}
+                                  name="password"
+                                  value={password}
+                                  placeholder="Password"
+                                  onChange={(e) => onChange(e)}
+                                />
                                 <InputRightElement width="4.5rem">
                                     <Button h="1.75rem" size="sm" onClick={handleShowPassword}>
                                         {show ? <ViewOffIcon /> : <ViewIcon />}
@@ -78,8 +93,8 @@ const Login = ({ login }) => {
     );
 };
 
-// const mapStateToProps = state => ({
-//     // is authenticated
-// });
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+});
 
-export default connect(null, { login })(Login);
+export default connect(mapStateToProps, { login })(Login);
