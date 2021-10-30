@@ -3,6 +3,7 @@ import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     Container,
+    Box,
     Flex,
     Stack,
     FormControl,
@@ -42,52 +43,54 @@ const Login = ({ login, isAuthenticated }) => {
     }
 
     return (
-        <Container maxW="container.sm" p="6">
-            <Flex direction="column" justify="center">
-                <Heading as="h1" mb="5" mt="5" align="center">
-                    Log In
-                </Heading>
-                <form onSubmit={(e) => onSubmit(e)}>
-                    <Stack spacing={3}>
-                        <FormControl id="email" isRequired>
-                            <Input
-                              type="email"
-                              name="email"
-                              value={email}
-                              placeholder="Email"
-                              onChange={(e) => onChange(e)}
-                            />
-                        </FormControl>
-                        <FormControl id="password" isRequired>
-                            <InputGroup size="md">
+        <Container maxW="container.md" p="6">
+            <Flex h="90%" direction="column" justify="center">
+                <Box boxShadow="xl" borderRadius="50% 25%" p="20">
+                    <Heading as="h1" mb="5" mt="5" align="center">
+                        Log In
+                    </Heading>
+                    <form onSubmit={(e) => onSubmit(e)}>
+                        <Stack spacing={3}>
+                            <FormControl id="email" isRequired>
                                 <Input
-                                  type={show ? 'text' : 'password'}
-                                  name="password"
-                                  value={password}
-                                  placeholder="Password"
+                                  type="email"
+                                  name="email"
+                                  value={email}
+                                  placeholder="Email"
                                   onChange={(e) => onChange(e)}
                                 />
-                                <InputRightElement width="4.5rem">
-                                    <Button h="1.75rem" size="sm" onClick={handleShowPassword}>
-                                        {show ? <ViewOffIcon /> : <ViewIcon />}
-                                    </Button>
-                                </InputRightElement>
-                            </InputGroup>
-                        </FormControl>
-                        <Button colorScheme="brand" type="submit" loadingText="Logging In" isFullWidth>
-                            Log In
-                        </Button>
-                    </Stack>
-                </form>
+                            </FormControl>
+                            <FormControl id="password" isRequired>
+                                <InputGroup size="md">
+                                    <Input
+                                      type={show ? 'text' : 'password'}
+                                      name="password"
+                                      value={password}
+                                      placeholder="Password"
+                                      onChange={(e) => onChange(e)}
+                                    />
+                                    <InputRightElement width="4.5rem">
+                                        <Button h="1.75rem" size="sm" onClick={handleShowPassword}>
+                                            {show ? <ViewOffIcon /> : <ViewIcon />}
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                            </FormControl>
+                            <Button colorScheme="brand" type="submit" loadingText="Logging In" isFullWidth>
+                                Log In
+                            </Button>
+                        </Stack>
+                    </form>
 
-                <Text mt="5" align="center">
-                    <Link as={RouterLink} to="reset-password">Forgot your Password?</Link>
-                </Text>
-                <Divider mt="5" mb="5" />
-                <Text align="center">
-                    New to RC Fleets?
-                    <Link as={RouterLink} to="signup" ml="1" variant="brand">Sign Up!</Link>
-                </Text>
+                    <Text mt="5" align="center">
+                        <Link as={RouterLink} to="reset-password">Forgot your Password?</Link>
+                    </Text>
+                    <Divider mt="5" mb="5" />
+                    <Text align="center">
+                        New to RC Fleets?
+                        <Link as={RouterLink} to="signup" ml="1" variant="brand">Sign Up!</Link>
+                    </Text>
+                </Box>
             </Flex>
         </Container>
     );

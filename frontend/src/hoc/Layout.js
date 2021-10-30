@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {
+    Flex,
+} from '@chakra-ui/react';
 import { checkAuthenticated, loadUser } from '../actions/auth';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -12,11 +15,13 @@ const Layout = ({ children, checkAuthenticated, loadUser }) => {
     }, []);
 
     return (
-        <div>
+        <Flex minH="100vh" direction="column">
             <Navbar />
-            {children}
+            <Flex flex="1">
+                {children}
+            </Flex>
             <Footer />
-        </div>
+        </Flex>
     );
 };
 

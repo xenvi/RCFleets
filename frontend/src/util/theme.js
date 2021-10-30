@@ -51,6 +51,13 @@ const theme = extendTheme({
         }),
     },
     components: {
+        Button: {
+            variants: {
+                ghost: {
+                    borderRadius: '50% 25%',
+                },
+            },
+        },
         Input: {
             defaultProps: {
                 focusBorderColor: 'brand.500',

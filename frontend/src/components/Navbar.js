@@ -18,7 +18,7 @@ const Navbar = () => {
     return (
         <Container maxW="container.lg">
             <Box w="100%" pt="4" pb="4">
-                <Flex>
+                <Flex flexWrap="wrap">
                     <Box>
                         <Link as={RouterLink} to="/">
                             <Heading
