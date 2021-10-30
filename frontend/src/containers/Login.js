@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
     Container,
     Box,
@@ -43,10 +44,10 @@ const Login = ({ login, isAuthenticated }) => {
     }
 
     return (
-        <Container maxW="container.md" p="6">
+        <Container maxW="container.md" p="1.5rem">
             <Flex h="90%" direction="column" justify="center">
-                <Box boxShadow="xl" borderRadius="50% 25%" p="20">
-                    <Heading as="h1" mb="5" mt="5" align="center">
+                <Box boxShadow="xl" borderRadius={['25% 12.5%', '50% 25%']} p={['2rem', '6rem', '10rem']}>
+                    <Heading as="h1" mb="1rem" mt="1rem" align="center">
                         Log In
                     </Heading>
                     <form onSubmit={(e) => onSubmit(e)}>
@@ -82,10 +83,10 @@ const Login = ({ login, isAuthenticated }) => {
                         </Stack>
                     </form>
 
-                    <Text mt="5" align="center">
+                    <Text mt="1rem" align="center">
                         <Link as={RouterLink} to="reset-password">Forgot your Password?</Link>
                     </Text>
-                    <Divider mt="5" mb="5" />
+                    <Divider mt="1rem" mb="1rem" colorScheme="slateGray" />
                     <Text align="center">
                         New to RC Fleets?
                         <Link as={RouterLink} to="signup" ml="1" variant="brand">Sign Up!</Link>
@@ -99,5 +100,10 @@ const Login = ({ login, isAuthenticated }) => {
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
 });
+
+Login.propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    login: PropTypes.func.isRequired,
+};
 
 export default connect(mapStateToProps, { login })(Login);

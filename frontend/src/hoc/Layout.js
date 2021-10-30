@@ -26,7 +26,9 @@ const Layout = ({ children, checkAuthenticated, loadUser }) => {
 };
 
 Layout.propTypes = {
+    checkAuthenticated: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
+    loadUser: PropTypes.func.isRequired,
 };
 
 export default connect(null, { checkAuthenticated, loadUser })(Layout);
