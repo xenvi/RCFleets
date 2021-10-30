@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import {
     Container,
     Flex,
@@ -6,37 +7,41 @@ import {
     Box,
     Button,
     Heading,
+    Link,
     useColorMode,
-    useColorModeValue,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 const Navbar = () => {
     const { colorMode, toggleColorMode } = useColorMode();
 
-    const bg = useColorModeValue('pale', 'dark');
-    const color = useColorModeValue('dark', 'pale');
-
     return (
         <Container maxW="container.lg">
-            <Flex>
-                <Box bg={bg} w="100%" p="4" color={color}>
+            <Box w="100%" pt="4" pb="4">
+                <Flex>
                     <Box>
-                        <Heading
-                          as="h5"
-                          color="dark"
-                        >
-                            RC Fleets
-                        </Heading>
+                        <Link as={RouterLink} to="/">
+                            <Heading
+                              as="h5"
+                            >
+                                RC Fleets
+                            </Heading>
+                        </Link>
                     </Box>
                     <Spacer />
                     <Box>
-                        <Button color="dark" variant="ghost" onClick={toggleColorMode}>
+                        <Button variant="ghost" onClick={toggleColorMode} mr="5">
                             {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                         </Button>
+                        <Button colorScheme="slateGray" mr="5">
+                            <Link as={RouterLink} to="/login">Log In</Link>
+                        </Button>
+                        <Button colorScheme="brand">
+                            <Link as={RouterLink} to="/signup">Sign Up</Link>
+                        </Button>
                     </Box>
-                </Box>
-            </Flex>
+                </Flex>
+            </Box>
         </Container>
     );
 };

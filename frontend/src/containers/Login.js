@@ -39,7 +39,7 @@ const Login = ({ login }) => {
     // is user authenticated? redirect to homepage
 
     return (
-        <Container maxW="container.sm">
+        <Container maxW="container.sm" p="6">
             <Flex direction="column" justify="center">
                 <Heading as="h1" mb="5" mt="5" align="center">
                     Log In
@@ -59,19 +59,19 @@ const Login = ({ login }) => {
                                 </InputRightElement>
                             </InputGroup>
                         </FormControl>
-                        <Button type="submit" loadingText="Logging In" isFullWidth>
+                        <Button colorScheme="brand" type="submit" loadingText="Logging In" isFullWidth>
                             Log In
                         </Button>
                     </Stack>
                 </form>
 
                 <Text mt="5" align="center">
-                    <Link to="reset-password">Forgot your Password?</Link>
+                    <Link as={RouterLink} to="reset-password">Forgot your Password?</Link>
                 </Text>
                 <Divider mt="5" mb="5" />
                 <Text align="center">
                     New to RC Fleets?
-                    <Link as={RouterLink} to="signup" ml="1">Sign Up!</Link>
+                    <Link as={RouterLink} to="signup" ml="1" variant="brand">Sign Up!</Link>
                 </Text>
             </Flex>
         </Container>

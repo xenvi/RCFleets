@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColorModeScript } from '@chakra-ui/react';
+import 'focus-visible/dist/focus-visible';
 import App from './App';
 import theme from './util/theme';
 
