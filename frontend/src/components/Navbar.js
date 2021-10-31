@@ -26,7 +26,7 @@ const Navbar = ({ logout, isAuthenticated }) => {
             <Button as={RouterLink} to="/login" colorScheme="slateGray" mr="1rem">
                 Log In
             </Button>
-            <Button as={RouterLink} to="/signup" colorScheme="brand">
+            <Button as={RouterLink} to="/signup" variant="brand">
                 Sign Up
             </Button>
         </>
@@ -36,7 +36,7 @@ const Navbar = ({ logout, isAuthenticated }) => {
             <Button variant="ghost" onClick={toggleColorMode} mr="1rem">
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
             </Button>
-            <Button as={Link} onClick={() => logout()} colorScheme="brand">
+            <Button as={Link} onClick={() => logout()} variant="brand">
                 Log Out
             </Button>
         </>

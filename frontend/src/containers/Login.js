@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -21,22 +21,34 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import { login } from '../actions/auth';
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, error }) => {
+    const [loading, setLoading] = useState(false);
+    const [formError, setFormError] = useState('');
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
-    const [show, setShow] = React.useState(false);
-    const handleShowPassword = () => setShow(!show);
+    const [show, setShow] = useState(false);
 
     const { email, password } = formData;
+
+    useEffect(() => {
+        if (error) {
+            setLoading(false);
+            setFormError(error);
+        } else if (isAuthenticated) {
+            setLoading(false);
+        } else if (loading) {
+            login(email, password);
+        }
+    }, [loading, isAuthenticated, error]);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
     const onSubmit = (e) => {
         e.preventDefault();
-        login(email, password);
+        setLoading(true);
     };
 
     if (isAuthenticated) {
@@ -46,7 +58,7 @@ const Login = ({ login, isAuthenticated }) => {
     return (
         <Container maxW="container.md" p="1.5rem">
             <Flex h="90%" direction="column" justify="center">
-                <Box boxShadow="xl" borderRadius={['25% 12.5%', '50% 25%']} p={['2rem', '6rem', '10rem']}>
+                <Box boxShadow="xl" borderRadius={['25% 12.5%', '50% 25%']} p={['3rem 2rem', '6rem', '10rem']}>
                     <Heading as="h1" mb="1rem" mt="1rem" align="center">
                         Log In
                     </Heading>
@@ -71,13 +83,16 @@ const Login = ({ login, isAuthenticated }) => {
                                       onChange={(e) => onChange(e)}
                                     />
                                     <InputRightElement width="4.5rem">
-                                        <Button h="1.75rem" size="sm" onClick={handleShowPassword}>
+                                        <Button variant="reveal" h="1.75rem" size="sm" onClick={() => setShow(!show)}>
                                             {show ? <ViewOffIcon /> : <ViewIcon />}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
                             </FormControl>
-                            <Button colorScheme="brand" type="submit" loadingText="Logging In" isFullWidth>
+
+                            { formError && <Text variant="error" mt="1.5rem" mb="1.5rem" align="center">{formError}</Text> }
+
+                            <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Log In
                             </Button>
                         </Stack>
@@ -86,7 +101,7 @@ const Login = ({ login, isAuthenticated }) => {
                     <Text mt="1rem" align="center">
                         <Link as={RouterLink} to="reset-password">Forgot your Password?</Link>
                     </Text>
-                    <Divider mt="1rem" mb="1rem" colorScheme="slateGray" />
+                    <Divider mt="1rem" mb="1rem" borderColor="slateGray" />
                     <Text align="center">
                         New to RC Fleets?
                         <Link as={RouterLink} to="signup" ml="1" variant="brand">Sign Up!</Link>
@@ -99,9 +114,11 @@ const Login = ({ login, isAuthenticated }) => {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
+    error: state.auth.error,
 });
 
 Login.propTypes = {
+    error: PropTypes.string.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     login: PropTypes.func.isRequired,
 };

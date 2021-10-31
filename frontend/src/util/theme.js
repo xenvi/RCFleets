@@ -5,7 +5,18 @@ const theme = extendTheme({
     initialColorMode: 'light',
     useSystemColorMode: false,
     colors: {
-        dark: '#252323',
+        dark: {
+            50: '#f9f0f0',
+            100: '#dad8d8',
+            200: '#bebebe',
+            300: '#a4a4a4',
+            400: '#8a8a8a',
+            500: '#717171',
+            600: '#585858',
+            700: '#403f3f',
+            800: '#272525',
+            900: '#130a0a',
+        },
         slateGray: {
             50: '#ecf2ff',
             100: '#d1d7e2',
@@ -39,8 +50,8 @@ const theme = extendTheme({
         global: (props) => ({
             body: {
                 fontFamily: 'body',
-                color: mode('dark', 'light')(props),
-                bg: mode('light', 'dark')(props),
+                color: mode('dark.800', 'light')(props),
+                bg: mode('light', 'dark.800')(props),
                 lineHeight: 'base',
             },
             a: {
@@ -53,12 +64,33 @@ const theme = extendTheme({
     components: {
         Button: {
             variants: {
+                brand: {
+                    fontWeight: 'bold',
+                    lineHeight: '0',
+                    color: 'light',
+                    backgroundColor: 'brand.500',
+                    _hover: {
+                        color: 'light',
+                        backgroundColor: 'brand.600',
+                    },
+                    _loading: {
+                        _hover: {
+                            backgroundColor: 'brand.500',
+                        },
+                    },
+                },
                 ghost: {
                     borderRadius: '50% 25%',
                 },
+                reveal: (props) => ({
+                    backgroundColor: mode('slateGray.50', 'slateGray.300')(props),
+                }),
             },
         },
         Input: {
+            baseStyle: {
+                _autofill: 'brand.500',
+            },
             defaultProps: {
                 focusBorderColor: 'brand.500',
             },
@@ -67,10 +99,20 @@ const theme = extendTheme({
             variants: {
                 brand: (props) => ({
                     fontWeight: 'bold',
-                    color: mode('brand.500', 'brand.300')(props),
+                    color: 'brand.500',
                     _hover: {
-                        color: mode('brand.600', 'brand.400')(props),
+                        color: mode('brand.600', 'brand.300')(props),
                     },
+                }),
+            },
+        },
+        Text: {
+            variants: {
+                error: (props) => ({
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                    color: mode('brand.500', 'brand.300')(props),
                 }),
             },
         },

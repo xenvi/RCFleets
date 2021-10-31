@@ -7,6 +7,10 @@ React/Django web application for users to save and share their RC car fleets!
 - Add CRUD abilities for RC Car info card
 - Expand footer with links/social
 - Ensure Responsive
+- Hosting (heroku)
+- Social login
+- Improve field errors on login form
+- Improve automated email templates for auth 
 
 # Long Term TODO
 - "Remember Me" functionality
@@ -14,4 +18,4 @@ React/Django web application for users to save and share their RC car fleets!
 - Forum/follow based features
 - Notifications
 - Google Analytics
-- React Helmet (resolve google crawl issues with React)
+- React Helmet (resolve google crawl indexing issues with React)

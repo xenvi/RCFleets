@@ -11,7 +11,9 @@
         "react/sort-prop-types": "warn",
         "react/no-unused-prop-types": "warn",
         "no-undef": "warn",
-        "no-shadow": "warn",
-        "no-unused-vars": "warn"
+        "no-shadow": "off",
+        "no-unused-vars": "warn",
+        "react/forbid-prop-types": "off",
+        "consistent-return": "off"
     }
 }

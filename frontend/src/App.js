@@ -16,14 +16,14 @@ import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 
 const GlobalStyles = css`
-  /*
-    Hide focus indicator if element receives focus via the mouse,
-    else show up on keyboard focus
-  */
-  .js-focus-visible :focus:not([data-focus-visible-added]) {
-     outline: none;
-     box-shadow: none;
-   }
+    /*
+        Hide focus indicator if element receives focus via the mouse,
+        else show up on keyboard focus
+    */
+    .js-focus-visible :focus:not([data-focus-visible-added]) {
+        outline: none;
+        box-shadow: none;
+    }
 `;
 
 const App = () => (
