@@ -48,7 +48,14 @@ const Login = ({ login, isAuthenticated, error }) => {
     };
     const onSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
+
+        if (!email) {
+            setFormError('Email is required.');
+        } else if (!password) {
+            setFormError('Password is required.');
+        } else {
+            setLoading(true);
+        }
     };
 
     if (isAuthenticated) {
@@ -56,24 +63,26 @@ const Login = ({ login, isAuthenticated, error }) => {
     }
 
     return (
-        <Container maxW="container.md" p="1.5rem">
+        <Container maxW="container.md" p={['0', '1.5rem']}>
             <Flex h="90%" direction="column" justify="center">
-                <Box boxShadow="xl" borderRadius={['25% 12.5%', '50% 25%']} p={['3rem 2rem', '6rem', '10rem']}>
+                <Box boxShadow={['0', 'xl']} borderRadius={['0', '25% 12.5%', '50% 25%']} p={['3rem 2rem', '6rem', '10rem']}>
                     <Heading as="h1" mb="1rem" mt="1rem" align="center">
                         Log In
                     </Heading>
                     <form onSubmit={(e) => onSubmit(e)}>
                         <Stack spacing={3}>
-                            <FormControl id="email" isRequired>
+                            <FormControl id="email">
                                 <Input
                                   type="email"
                                   name="email"
                                   value={email}
                                   placeholder="Email"
                                   onChange={(e) => onChange(e)}
+                                  isInvalid={formError.includes('Email')}
+                                  errorBorderColor="brand.300"
                                 />
                             </FormControl>
-                            <FormControl id="password" isRequired>
+                            <FormControl id="password">
                                 <InputGroup size="md">
                                     <Input
                                       type={show ? 'text' : 'password'}
@@ -81,8 +90,10 @@ const Login = ({ login, isAuthenticated, error }) => {
                                       value={password}
                                       placeholder="Password"
                                       onChange={(e) => onChange(e)}
+                                      isInvalid={formError.includes('Password')}
+                                      errorBorderColor="brand.300"
                                     />
-                                    <InputRightElement width="4.5rem">
+                                    <InputRightElement width={['3.5rem', '4.5rem']}>
                                         <Button variant="reveal" h="1.75rem" size="sm" onClick={() => setShow(!show)}>
                                             {show ? <ViewOffIcon /> : <ViewIcon />}
                                         </Button>
@@ -90,7 +101,7 @@ const Login = ({ login, isAuthenticated, error }) => {
                                 </InputGroup>
                             </FormControl>
 
-                            { formError && <Text variant="error" mt="1.5rem" mb="1.5rem" align="center">{formError}</Text> }
+                            <Text variant="error" mt="1.5rem" mb="1.5rem">{formError}</Text>
 
                             <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Log In
@@ -101,7 +112,7 @@ const Login = ({ login, isAuthenticated, error }) => {
                     <Text mt="1rem" align="center">
                         <Link as={RouterLink} to="reset-password">Forgot your Password?</Link>
                     </Text>
-                    <Divider mt="1rem" mb="1rem" borderColor="slateGray" />
+                    <Divider mt="1rem" mb="1rem" borderColor="slateGray.200" />
                     <Text align="center">
                         New to RC Fleets?
                         <Link as={RouterLink} to="signup" ml="1" variant="brand">Sign Up!</Link>

@@ -88,9 +88,6 @@ const theme = extendTheme({
             },
         },
         Input: {
-            baseStyle: {
-                _autofill: 'brand.500',
-            },
             defaultProps: {
                 focusBorderColor: 'brand.500',
             },
@@ -112,7 +109,7 @@ const theme = extendTheme({
                     fontSize: '0.8rem',
                     fontWeight: 'bold',
                     fontStyle: 'italic',
-                    color: mode('brand.500', 'brand.300')(props),
+                    color: 'brand.300',
                 }),
             },
         },

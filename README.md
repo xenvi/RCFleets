@@ -9,8 +9,9 @@ React/Django web application for users to save and share their RC car fleets!
 - Ensure Responsive
 - Hosting (heroku)
 - Social login
-- Improve field errors on login form
-- Improve automated email templates for auth 
+~~- Improve field errors on forms~~
+- Create confirmation pages/alerts after password reset/confirm reset
+- Improve automated email templates for auth
 
 # Long Term TODO
 - "Remember Me" functionality

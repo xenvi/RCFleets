@@ -10,6 +10,7 @@ import {
     FormControl,
     Input,
     Heading,
+    Text,
     Button,
 } from '@chakra-ui/react';
 import { resetPassword } from '../actions/auth';
@@ -17,6 +18,7 @@ import { resetPassword } from '../actions/auth';
 const ResetPassword = ({ resetPassword }) => {
     const [loading, setLoading] = useState(false);
     const [requestSent, setRequestSent] = useState(false);
+    const [formError, setFormError] = useState('');
     const [formData, setFormData] = useState({
         email: '',
     });
@@ -37,7 +39,11 @@ const ResetPassword = ({ resetPassword }) => {
     };
     const onSubmit = (e) => {
         e.preventDefault();
-        setLoading(true);
+        if (!email) {
+            setFormError('Email is required.');
+        } else {
+            setLoading(true);
+        }
     };
 
     if (requestSent) {
@@ -45,23 +51,28 @@ const ResetPassword = ({ resetPassword }) => {
     }
 
     return (
-        <Container maxW="container.md" p="1.5rem">
+        <Container maxW="container.md" p={['0', '1.5rem']}>
             <Flex h="90%" direction="column" justify="center">
-                <Box boxShadow="xl" borderRadius={['25% 12.5%', '50% 25%']} p={['3rem 2rem', '6rem', '8rem']}>
+                <Box boxShadow={['0', 'xl']} borderRadius={['0', '25% 12.5%', '50% 25%']} p={['3rem 2rem', '6rem', '8rem']}>
                     <Heading as="h1" mb="1rem" mt="1rem" align="center">
                         Request Password Reset
                     </Heading>
                     <form onSubmit={(e) => onSubmit(e)}>
                         <Stack spacing={3}>
-                            <FormControl id="email" isRequired>
+                            <FormControl id="email">
                                 <Input
                                   type="email"
                                   name="email"
                                   value={email}
                                   placeholder="Email"
                                   onChange={(e) => onChange(e)}
+                                  isInvalid={formError.includes('Email')}
+                                  errorBorderColor="brand.300"
                                 />
                             </FormControl>
+
+                            <Text variant="error" mt="1.5rem" mb="1.5rem">{formError}</Text>
+
                             <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Reset Password
                             </Button>
