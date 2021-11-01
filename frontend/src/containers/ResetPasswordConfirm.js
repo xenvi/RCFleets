@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -12,35 +12,33 @@ import {
     Input,
     InputRightElement,
     Heading,
-    Text,
     Button,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { resetPasswordConfirm } from '../actions/auth';
+import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
-const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
-    const [loading, setLoading] = useState(false);
-    const [requestSent, setRequestSent] = useState(false);
+const ResetPasswordConfirm = ({
+    match, resetPasswordConfirm, error, loading,
+}) => {
     const [show, setShow] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [formError, setFormError] = useState('');
+    const [formErrors, setFormErrors] = useState([]);
     const [formData, setFormData] = useState({
         newPassword: '',
         reNewPassword: '',
     });
 
     const { newPassword, reNewPassword } = formData;
+    const history = useHistory();
 
     useEffect(() => {
-        if (requestSent) {
-            setLoading(false);
-        } else if (loading) {
-            const { uid, token } = match.params;
-
-            resetPasswordConfirm(uid, token, newPassword, reNewPassword);
-            setRequestSent(true);
+        if (error) {
+            setFormErrors(mapFormErrors(error));
+        } else {
+            setFormErrors([]);
         }
-    }, [loading, requestSent]);
+    }, [error]);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,19 +46,16 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         if (!newPassword) {
-            setFormError('Password is required.');
+            setFormErrors(formatFormErrors('password', 'Password is required.'));
         } else if (!reNewPassword) {
-            setFormError('Confirm Password is required.');
+            setFormErrors(formatFormErrors('re_new_password', 'Confirm Password is required.'));
         } else if (newPassword !== reNewPassword) {
-            setFormError('Passwords must match.');
+            setFormErrors(formatFormErrors('passwords', 'Passwords must match.'));
         } else {
-            setLoading(true);
+            const { uid, token } = match.params;
+            resetPasswordConfirm(uid, token, newPassword, reNewPassword, history);
         }
     };
-
-    if (requestSent) {
-        return <Redirect to="/" />;
-    }
 
     return (
         <Container maxW="container.md" p={['0', '1.5rem']}>
@@ -79,7 +74,7 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
                                       value={newPassword}
                                       placeholder="New Password"
                                       onChange={(e) => onChange(e)}
-                                      isInvalid={(formError.includes('Password') && !formError.includes('Confirm')) || formError.includes('match')}
+                                      isInvalid={formErrors[0] && (formErrors[0][0] === 'password' || formErrors[0][0] === 'passwords')}
                                       errorBorderColor="brand.300"
                                     />
                                     <InputRightElement width={['3.5rem', '4.5rem']}>
@@ -97,7 +92,7 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
                                       value={reNewPassword}
                                       placeholder="Confirm New Password"
                                       onChange={(e) => onChange(e)}
-                                      isInvalid={formError.includes('Confirm') || formError.includes('match')}
+                                      isInvalid={formErrors[0] && (formErrors[0][0] === 're_new_password' || formErrors[0][0] === 'passwords')}
                                       errorBorderColor="brand.300"
                                     />
                                     <InputRightElement width={['3.5rem', '4.5rem']}>
@@ -108,7 +103,7 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
                                 </InputGroup>
                             </FormControl>
 
-                            <Text variant="error" mt="1.5rem" mb="1.5rem">{formError}</Text>
+                            { renderFormErrors(formErrors) }
 
                             <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Reset Password
@@ -121,9 +116,16 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
     );
 };
 
+const mapStateToProps = (state) => ({
+    error: state.auth.error,
+    loading: state.auth.loading,
+});
+
 ResetPasswordConfirm.propTypes = {
+    error: PropTypes.string.isRequired,
+    loading: PropTypes.bool.isRequired,
     match: PropTypes.object.isRequired,
     resetPasswordConfirm: PropTypes.func.isRequired,
 };
 
-export default connect(null, { resetPasswordConfirm })(ResetPasswordConfirm);
+export default connect(mapStateToProps, { resetPasswordConfirm })(ResetPasswordConfirm);

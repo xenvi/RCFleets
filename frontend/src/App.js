@@ -16,6 +16,7 @@ import SignupSuccess from './containers/SignupSuccess';
 import Activate from './containers/Activate';
 import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
+import ResetPasswordSuccess from './containers/ResetPasswordSuccess';
 
 const GlobalStyles = css`
     /*
@@ -41,6 +42,7 @@ const App = () => (
                         <Route exact path="/signup/success" component={SignupSuccess} />
                         <Route exact path="/activate/:uid/:token" component={Activate} />
                         <Route exact path="/reset-password" component={ResetPassword} />
+                        <Route exact path="/reset-password/success" component={ResetPasswordSuccess} />
                         <Route exact path="/password/reset/confirm/:uid/:token" component={ResetPasswordConfirm} />
                     </Switch>
                 </Layout>

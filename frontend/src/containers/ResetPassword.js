@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -10,29 +10,27 @@ import {
     FormControl,
     Input,
     Heading,
-    Text,
     Button,
 } from '@chakra-ui/react';
 import { resetPassword } from '../actions/auth';
+import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
-const ResetPassword = ({ resetPassword }) => {
-    const [loading, setLoading] = useState(false);
-    const [requestSent, setRequestSent] = useState(false);
-    const [formError, setFormError] = useState('');
+const ResetPassword = ({ resetPassword, error, loading }) => {
+    const [formErrors, setFormErrors] = useState([]);
     const [formData, setFormData] = useState({
         email: '',
     });
 
     const { email } = formData;
+    const history = useHistory();
 
     useEffect(() => {
-        if (requestSent) {
-            setLoading(false);
-        } else if (loading) {
-            resetPassword(email);
-            setRequestSent(true);
+        if (error) {
+            setFormErrors(mapFormErrors(error));
+        } else {
+            setFormErrors([]);
         }
-    }, [loading, requestSent]);
+    }, [error]);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,15 +38,11 @@ const ResetPassword = ({ resetPassword }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         if (!email) {
-            setFormError('Email is required.');
+            setFormErrors(formatFormErrors('email', 'Email is required.'));
         } else {
-            setLoading(true);
+            resetPassword(email, history);
         }
     };
-
-    if (requestSent) {
-        return <Redirect to="/" />;
-    }
 
     return (
         <Container maxW="container.md" p={['0', '1.5rem']}>
@@ -66,12 +60,12 @@ const ResetPassword = ({ resetPassword }) => {
                                   value={email}
                                   placeholder="Email"
                                   onChange={(e) => onChange(e)}
-                                  isInvalid={formError.includes('Email')}
+                                  isInvalid={formErrors[0] && formErrors[0][0] === 'email'}
                                   errorBorderColor="brand.300"
                                 />
                             </FormControl>
 
-                            <Text variant="error" mt="1.5rem" mb="1.5rem">{formError}</Text>
+                            { renderFormErrors(formErrors) }
 
                             <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Reset Password
@@ -84,8 +78,15 @@ const ResetPassword = ({ resetPassword }) => {
     );
 };
 
+const mapStateToProps = (state) => ({
+    error: state.auth.error,
+    loading: state.auth.loading,
+});
+
 ResetPassword.propTypes = {
+    error: PropTypes.string.isRequired,
+    loading: PropTypes.bool.isRequired,
     resetPassword: PropTypes.func.isRequired,
 };
 
-export default connect(null, { resetPassword })(ResetPassword);
+export default connect(mapStateToProps, { resetPassword })(ResetPassword);

@@ -202,7 +202,9 @@ export const logout = () => async (dispatch) => {
     });
 };
 
-export const resetPassword = (email) => async (dispatch) => {
+export const resetPassword = (email, history) => async (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -216,14 +218,19 @@ export const resetPassword = (email) => async (dispatch) => {
         dispatch({
             type: PASSWORD_RESET_SUCCESS,
         });
+
+        history.push('/reset-password/success');
     } catch (err) {
         dispatch({
             type: PASSWORD_RESET_FAIL,
+            error: err.response.data,
         });
     }
 };
 
-export const resetPasswordConfirm = (uid, token, newPassword, reNewPassword) => async (dispatch) => {
+export const resetPasswordConfirm = (uid, token, newPassword, reNewPassword, history) => async (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -239,9 +246,17 @@ export const resetPasswordConfirm = (uid, token, newPassword, reNewPassword) => 
         dispatch({
             type: PASSWORD_RESET_CONFIRM_SUCCESS,
         });
+
+        history.push('/');
+
+        dispatch({
+            type: ALERT_SUCCESS,
+            payload: 'Password reset successful! Bash on!',
+        });
     } catch (err) {
         dispatch({
             type: PASSWORD_RESET_CONFIRM_FAIL,
+            error: err.response.data,
         });
     }
 };

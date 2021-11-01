@@ -58,6 +58,12 @@ export default (state = initialState, action) => {
             refresh: payload.refresh,
             loading: false,
         };
+    case SIGNUP_SUCCESS:
+        return {
+            ...state,
+            isAuthenticated: false,
+            loading: false,
+        };
     case LOGIN_FAIL:
     case SIGNUP_FAIL:
         localStorage.removeItem('access');
@@ -71,22 +77,10 @@ export default (state = initialState, action) => {
             error,
             loading: false,
         };
-    case SIGNUP_SUCCESS:
-        return {
-            ...state,
-            isAuthenticated: false,
-            loading: false,
-        };
     case LOGOUT:
         localStorage.removeItem('access');
         localStorage.removeItem('refresh');
-        return {
-            ...state,
-            isAuthenticated: false,
-            access: null,
-            refresh: null,
-            user: null,
-        };
+        return initialState;
     case USER_LOADED_SUCCESS:
         return {
             ...state,
@@ -98,11 +92,16 @@ export default (state = initialState, action) => {
             user: null,
         };
     case PASSWORD_RESET_FAIL:
-    case PASSWORD_RESET_SUCCESS:
     case PASSWORD_RESET_CONFIRM_FAIL:
+    case ACTIVATION_FAIL:
+        return {
+            ...state,
+            loading: false,
+            error,
+        };
+    case PASSWORD_RESET_SUCCESS:
     case PASSWORD_RESET_CONFIRM_SUCCESS:
     case ACTIVATION_SUCCESS:
-    case ACTIVATION_FAIL:
         return {
             ...state,
             loading: false,
