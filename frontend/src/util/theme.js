@@ -105,12 +105,12 @@ const theme = extendTheme({
         },
         Text: {
             variants: {
-                error: (props) => ({
+                error: {
                     fontSize: '0.8rem',
                     fontWeight: 'bold',
                     fontStyle: 'italic',
                     color: 'brand.300',
-                }),
+                },
             },
         },
     },

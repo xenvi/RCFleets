@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, Redirect } from 'react-router-dom';
+import { Link as RouterLink, Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
@@ -20,10 +20,12 @@ import {
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import { login } from '../actions/auth';
+import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
-const Login = ({ login, isAuthenticated, error }) => {
-    const [loading, setLoading] = useState(false);
-    const [formError, setFormError] = useState('');
+const Login = ({
+    login, isAuthenticated, error, loading,
+}) => {
+    const [formErrors, setFormErrors] = useState([]);
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -31,17 +33,15 @@ const Login = ({ login, isAuthenticated, error }) => {
     const [show, setShow] = useState(false);
 
     const { email, password } = formData;
+    const history = useHistory();
 
     useEffect(() => {
         if (error) {
-            setLoading(false);
-            setFormError(error);
-        } else if (isAuthenticated) {
-            setLoading(false);
-        } else if (loading) {
-            login(email, password);
+            setFormErrors(mapFormErrors(error));
+        } else {
+            setFormErrors([]);
         }
-    }, [loading, isAuthenticated, error]);
+    }, [error]);
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,11 +50,11 @@ const Login = ({ login, isAuthenticated, error }) => {
         e.preventDefault();
 
         if (!email) {
-            setFormError('Email is required.');
+            setFormErrors(formatFormErrors('email', 'Email is required.'));
         } else if (!password) {
-            setFormError('Password is required.');
+            setFormErrors(formatFormErrors('password', 'Password is required.'));
         } else {
-            setLoading(true);
+            login(email, password, history);
         }
     };
 
@@ -78,7 +78,7 @@ const Login = ({ login, isAuthenticated, error }) => {
                                   value={email}
                                   placeholder="Email"
                                   onChange={(e) => onChange(e)}
-                                  isInvalid={formError.includes('Email')}
+                                  isInvalid={formErrors[0] && formErrors[0][0] === 'email'}
                                   errorBorderColor="brand.300"
                                 />
                             </FormControl>
@@ -90,7 +90,7 @@ const Login = ({ login, isAuthenticated, error }) => {
                                       value={password}
                                       placeholder="Password"
                                       onChange={(e) => onChange(e)}
-                                      isInvalid={formError.includes('Password')}
+                                      isInvalid={formErrors[0] && formErrors[0][0] === 'password'}
                                       errorBorderColor="brand.300"
                                     />
                                     <InputRightElement width={['3.5rem', '4.5rem']}>
@@ -101,7 +101,7 @@ const Login = ({ login, isAuthenticated, error }) => {
                                 </InputGroup>
                             </FormControl>
 
-                            <Text variant="error" mt="1.5rem" mb="1.5rem">{formError}</Text>
+                            { renderFormErrors(formErrors) }
 
                             <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Log In
@@ -126,11 +126,13 @@ const Login = ({ login, isAuthenticated, error }) => {
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
     error: state.auth.error,
+    loading: state.auth.loading,
 });
 
 Login.propTypes = {
     error: PropTypes.string.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     login: PropTypes.func.isRequired,
 };
 

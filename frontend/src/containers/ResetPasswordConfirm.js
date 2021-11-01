@@ -51,6 +51,8 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
             setFormError('Password is required.');
         } else if (!reNewPassword) {
             setFormError('Confirm Password is required.');
+        } else if (newPassword !== reNewPassword) {
+            setFormError('Passwords must match.');
         } else {
             setLoading(true);
         }
@@ -77,7 +79,7 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
                                       value={newPassword}
                                       placeholder="New Password"
                                       onChange={(e) => onChange(e)}
-                                      isInvalid={formError.includes('Password') && !formError.includes('Confirm')}
+                                      isInvalid={(formError.includes('Password') && !formError.includes('Confirm')) || formError.includes('match')}
                                       errorBorderColor="brand.300"
                                     />
                                     <InputRightElement width={['3.5rem', '4.5rem']}>
@@ -95,7 +97,7 @@ const ResetPasswordConfirm = ({ match, resetPasswordConfirm }) => {
                                       value={reNewPassword}
                                       placeholder="Confirm New Password"
                                       onChange={(e) => onChange(e)}
-                                      isInvalid={formError.includes('Confirm')}
+                                      isInvalid={formError.includes('Confirm') || formError.includes('match')}
                                       errorBorderColor="brand.300"
                                     />
                                     <InputRightElement width={['3.5rem', '4.5rem']}>
