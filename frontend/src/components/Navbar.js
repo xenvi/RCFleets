@@ -29,32 +29,41 @@ const Navbar = ({ logout, isAuthenticated }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toggleMenu = () => onOpen();
 
-    const guestLinks = () => (
+    const handleSettings = (drawerOpen) => {
+        <Redirect to="/settings" />;
+        return drawerOpen && toggleMenu();
+    };
+    const handleLogout = (drawerOpen) => {
+        logout();
+        return drawerOpen && toggleMenu();
+    };
+
+    const guestLinks = (drawerOpen) => (
         <>
             <Box display={['block', 'inline-block']} m="auto">
                 <Button variant="ghost" onClick={toggleColorMode} mr={['0', '1rem']}>
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
             </Box>
-            <Button as={RouterLink} to="/login" colorScheme="slateGray" mr={['0', '1rem']}>
+            <Button as={RouterLink} to="/login" onClick={() => drawerOpen && toggleMenu()} colorScheme="slateGray" mr={['0', '1rem']}>
                 Log In
             </Button>
-            <Button as={RouterLink} to="/signup" variant="brand">
+            <Button as={RouterLink} to="/signup" onClick={() => drawerOpen && toggleMenu()} variant="brand">
                 Sign Up
             </Button>
         </>
     );
-    const authLinks = () => (
+    const authLinks = (drawerOpen) => (
         <>
             <Box display={['block', 'inline-block']} m="auto">
-                <Button variant="ghost" onClick={toggleColorMode} mr={['0', '1rem']}>
+                <Button variant="ghost" onClick={toggleColorMode} mr={['0', '0.5rem']}>
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
             </Box>
-            <Button variant="ghost" onClick={() => <Redirect to="/settings" />} mr={['0', '1rem']}>
+            <Button variant="ghost" onClick={() => handleSettings(drawerOpen)} mr={['0', '1rem']}>
                 <SettingsIcon />
             </Button>
-            <Button as={Link} onClick={() => logout()} variant="brand">
+            <Button as={Link} onClick={() => handleLogout(drawerOpen)} variant="brand">
                 Log Out
             </Button>
         </>
@@ -94,7 +103,7 @@ const Navbar = ({ logout, isAuthenticated }) => {
 
                             <DrawerBody>
                                 <Stack spacing={6}>
-                                    { isAuthenticated ? authLinks() : guestLinks() }
+                                    { isAuthenticated ? authLinks(true) : guestLinks(true) }
                                 </Stack>
                             </DrawerBody>
                         </DrawerContent>

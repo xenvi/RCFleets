@@ -63,6 +63,12 @@ const theme = extendTheme({
     },
     components: {
         Button: {
+            baseStyle: {
+                _focus: {
+                    outline: '2px solid #b0353f',
+                    boxShadow: 'none',
+                },
+            },
             variants: {
                 brand: {
                     fontWeight: 'bold',

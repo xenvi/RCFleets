@@ -4,7 +4,7 @@ import {
 } from '@chakra-ui/react';
 
 const Home = () => (
-    <Container maxW="container.lg" p={['0', '1.5rem']}>
+    <Container maxW="container.lg" p="1.5rem">
         Home
     </Container>
 );
