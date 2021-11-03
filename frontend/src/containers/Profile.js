@@ -3,10 +3,10 @@ import {
     Container,
 } from '@chakra-ui/react';
 
-const Home = () => (
+const Profile = () => (
     <Container maxW="container.lg" p={['0', '1.5rem']}>
-        Home
+        Profile
     </Container>
 );
 
-export default Home;
+export default Profile;

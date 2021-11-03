@@ -17,6 +17,7 @@ import Activate from './containers/Activate';
 import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 import ResetPasswordSuccess from './containers/ResetPasswordSuccess';
+import Profile from './containers/Profile';
 
 const GlobalStyles = css`
     /*
@@ -44,6 +45,7 @@ const App = () => (
                         <Route exact path="/reset-password" component={ResetPassword} />
                         <Route exact path="/reset-password/success" component={ResetPasswordSuccess} />
                         <Route exact path="/password/reset/confirm/:uid/:token" component={ResetPasswordConfirm} />
+                        <Route exact path="/user/:handle" component={Profile} />
                     </Switch>
                 </Layout>
             </ChakraProvider>

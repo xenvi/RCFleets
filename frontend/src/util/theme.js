@@ -113,6 +113,32 @@ const theme = extendTheme({
                 },
             },
         },
+        Container: {
+            variants: {
+                nav: (props) => ({
+                    backgroundColor: mode('light', 'dark.800')(props),
+                    zIndex: 999,
+                    position: 'sticky',
+                    top: '0',
+                }),
+            },
+        },
+        Drawer: {
+            baseStyle: (props) => ({
+                dialog: {
+                    color: mode('dark.800', 'light')(props),
+                    backgroundColor: mode('light', 'dark.800')(props),
+                },
+                closeButton: {
+                    borderRadius: '50% 25%',
+                    top: 5,
+                    insetEnd: 5,
+                },
+                body: {
+                    padding: '1.75rem',
+                },
+            }),
+        },
     },
 });
 
