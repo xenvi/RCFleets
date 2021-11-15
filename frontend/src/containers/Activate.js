@@ -11,7 +11,7 @@ import {
     Button,
 } from '@chakra-ui/react';
 
-import { verify } from '../actions/auth';
+import { verify } from '../redux/actions/auth';
 
 const Activate = ({ match, verify, loading }) => {
     const history = useHistory();

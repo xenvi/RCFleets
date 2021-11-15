@@ -12,7 +12,7 @@ import {
     Heading,
     Button,
 } from '@chakra-ui/react';
-import { resetPassword } from '../actions/auth';
+import { resetPassword } from '../redux/actions/auth';
 import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
 const ResetPassword = ({ resetPassword, error, loading }) => {

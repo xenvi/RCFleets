@@ -15,7 +15,7 @@ import {
     Button,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { resetPasswordConfirm } from '../actions/auth';
+import { resetPasswordConfirm } from '../redux/actions/auth';
 import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
 const ResetPasswordConfirm = ({

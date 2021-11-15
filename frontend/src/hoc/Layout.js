@@ -11,7 +11,7 @@ import {
     loadUser,
     clearErrors,
     clearAlerts,
-} from '../actions/auth';
+} from '../redux/actions/auth';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 

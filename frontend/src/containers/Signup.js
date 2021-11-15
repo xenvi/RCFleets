@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
-import { signup } from '../actions/auth';
+import { signup } from '../redux/actions/auth';
 import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
 const SignUp = ({
