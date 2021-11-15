@@ -15,26 +15,29 @@ import {
     DrawerContent,
     DrawerCloseButton,
     Stack,
+    Avatar,
+    AiOutlineUser,
     useColorMode,
     useDisclosure,
 } from '@chakra-ui/react';
 import {
-    MoonIcon, SunIcon, SettingsIcon, HamburgerIcon,
+    MoonIcon, SunIcon, HamburgerIcon,
 } from '@chakra-ui/icons';
 import { connect } from 'react-redux';
-import { logout } from '../actions/auth';
+import { logout } from '../redux/actions/auth';
 
-const Navbar = ({ logout, isAuthenticated }) => {
+const Navbar = ({ logout, isAuthenticated, user }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toggleMenu = () => onOpen();
 
-    const handleSettings = (drawerOpen) => {
-        <Redirect to="/settings" />;
-        return drawerOpen && toggleMenu();
-    };
     const handleLogout = (drawerOpen) => {
         logout();
+        return drawerOpen && toggleMenu();
+    };
+
+    const handleProfile = (drawerOpen) => {
+        console.log('handle profile');
         return drawerOpen && toggleMenu();
     };
 
@@ -45,9 +48,11 @@ const Navbar = ({ logout, isAuthenticated }) => {
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
             </Box>
-            <Button as={RouterLink} to="/login" onClick={() => drawerOpen && toggleMenu()} colorScheme="slateGray" mr={['0', '1rem']}>
-                Log In
-            </Button>
+            <Box display={['block', 'inline-block']} m="auto">
+                <Button as={RouterLink} to="/login" onClick={() => drawerOpen && toggleMenu()} colorScheme="slateGray" mr={['0', '1rem']}>
+                    Log In
+                </Button>
+            </Box>
             <Button as={RouterLink} to="/signup" onClick={() => drawerOpen && toggleMenu()} variant="brand">
                 Sign Up
             </Button>
@@ -60,15 +65,15 @@ const Navbar = ({ logout, isAuthenticated }) => {
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
             </Box>
-            <Button variant="ghost" onClick={() => handleSettings(drawerOpen)} mr={['0', '1rem']}>
-                <SettingsIcon />
+            <Button variant="ghost" onClick={() => handleProfile(drawerOpen)} mr={['0', '1rem']}>
+                {/* { hasAvatar ? <Avatar name={user.handle} src={user.avatar} /> : <Avatar bg="brand.500" icon={<AiOutlineUser fontSize="1.5rem" />} />} */}
+                {/* <Avatar bg="brand.500" icon={<AiOutlineUser fontSize="1.5rem" />} /> */}
             </Button>
             <Button as={Link} onClick={() => handleLogout(drawerOpen)} variant="brand">
                 Log Out
             </Button>
         </>
     );
-
     return (
         <Container maxW="100%" as="nav" variant="nav">
             <Container maxW="container.lg">
@@ -120,11 +125,13 @@ const Navbar = ({ logout, isAuthenticated }) => {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
 });
 
 Navbar.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, { logout })(Navbar);

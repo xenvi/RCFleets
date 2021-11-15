@@ -50,7 +50,7 @@ const theme = extendTheme({
         global: (props) => ({
             body: {
                 fontFamily: 'body',
-                color: mode('dark.800', 'light')(props),
+                color: mode('dark.700', 'light')(props),
                 bg: mode('light', 'dark.800')(props),
                 lineHeight: 'base',
             },
@@ -144,6 +144,16 @@ const theme = extendTheme({
                     padding: '1.75rem',
                 },
             }),
+        },
+        Flex: {
+            variants: {
+                card: {
+                    boxShadow: 'lg',
+                },
+                featuredCard: {
+                    boxShadow: '0 0.5rem 1.5rem brand.300',
+                },
+            },
         },
     },
 });

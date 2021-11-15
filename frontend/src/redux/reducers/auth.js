@@ -14,11 +14,9 @@ import {
     PASSWORD_RESET_CONFIRM_FAIL,
     PASSWORD_RESET_CONFIRM_SUCCESS,
     LOGOUT,
-    ALERT_SUCCESS,
-    CLEAR_ALERTS,
-    CLEAR_ERRORS,
-    LOADING_UI,
-} from '../actions/types';
+    SET_PROFILE,
+    UNSET_PROFILE,
+} from '../types';
 
 const initialState = {
     access: localStorage.getItem('access'),
@@ -28,17 +26,13 @@ const initialState = {
     alert: null,
     error: null,
     loading: false,
+    profile: {},
 };
 
 export default (state = initialState, action) => {
     const { type, payload, error } = action;
 
     switch (type) {
-    case LOADING_UI:
-        return {
-            ...state,
-            loading: true,
-        };
     case AUTHENTICATED_SUCCESS:
         return {
             ...state,
@@ -106,20 +100,16 @@ export default (state = initialState, action) => {
             ...state,
             loading: false,
         };
-    case ALERT_SUCCESS:
+    case SET_PROFILE:
         return {
             ...state,
-            alert: payload,
+            profile: action.payload,
+            loading: false,
         };
-    case CLEAR_ERRORS:
+    case UNSET_PROFILE:
         return {
             ...state,
-            error: null,
-        };
-    case CLEAR_ALERTS:
-        return {
-            ...state,
-            alert: null,
+            profile: {},
         };
     default:
         return state;

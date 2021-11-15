@@ -4,7 +4,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { Global, css } from '@emotion/react';
 import { Provider } from 'react-redux';
 // util
-import store from './util/store';
+import store from './redux/store';
 import theme from './util/theme';
 // hoc
 import Layout from './hoc/Layout';

@@ -19,7 +19,7 @@ import {
     CLEAR_ALERTS,
     CLEAR_ERRORS,
     LOADING_UI,
-} from './types';
+} from '../types';
 
 export const showAlert = (message) => async (dispatch) => {
     dispatch({

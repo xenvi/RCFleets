@@ -4,8 +4,11 @@
         "chakra",
         "djoser",
         "dotenv",
+        "fleetpost",
+        "fleetposts",
         "gmail",
         "linebreak",
+        "Lipo",
         "rcfleets",
         "simplejwt"
     ]
