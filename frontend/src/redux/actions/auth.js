@@ -19,6 +19,9 @@ import {
     CLEAR_ALERTS,
     CLEAR_ERRORS,
     LOADING_UI,
+    SET_PROFILE_SUCCESS,
+    SET_PROFILE_FAIL,
+    UNSET_PROFILE,
 } from '../types';
 
 export const showAlert = (message) => async (dispatch) => {
@@ -36,6 +39,35 @@ export const clearErrors = () => async (dispatch) => {
 export const clearAlerts = () => async (dispatch) => {
     dispatch({
         type: CLEAR_ALERTS,
+    });
+};
+
+export const setProfile = (handle) => async (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+    };
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${handle}`, config);
+
+        dispatch({
+            type: SET_PROFILE_SUCCESS,
+            payload: res.data,
+        });
+    } catch (err) {
+        dispatch({
+            type: SET_PROFILE_FAIL,
+        });
+    }
+};
+
+export const unsetProfile = () => async (dispatch) => {
+    dispatch({
+        type: UNSET_PROFILE,
     });
 };
 
@@ -92,6 +124,8 @@ export const loadUser = () => async (dispatch) => {
                 type: USER_LOADED_SUCCESS,
                 payload: res.data,
             });
+
+            dispatch(setProfile(res.data.handle));
         } catch (err) {
             dispatch({
                 type: USER_LOADED_FAIL,
@@ -130,7 +164,7 @@ export const login = (email, password, history) => async (dispatch) => {
     } catch (err) {
         dispatch({
             type: LOGIN_FAIL,
-            error: err.response.data,
+            error: err,
         });
     }
 };
@@ -196,10 +230,11 @@ export const verify = (uid, token, history) => async (dispatch) => {
     }
 };
 
-export const logout = () => async (dispatch) => {
+export const logout = (history) => async (dispatch) => {
     dispatch({
         type: LOGOUT,
     });
+    history.push('/');
 };
 
 export const resetPassword = (email, history) => async (dispatch) => {

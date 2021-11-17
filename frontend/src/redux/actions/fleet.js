@@ -1,7 +1,9 @@
 import axios from 'axios';
 import {
-    SET_FLEETS,
-    SET_FLEET,
+    SET_FLEETS_SUCCESS,
+    SET_FLEETS_FAIL,
+    SET_FLEET_SUCCESS,
+    SET_FLEET_FAIL,
     UNSET_FLEET,
     CREATE_FLEET_POST_SUCCESS,
     CREATE_FLEET_POST_FAIL,
@@ -16,9 +18,51 @@ import {
 } from '../types';
 
 export const setFleets = () => async (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets`, config);
+
+        dispatch({
+            type: SET_FLEETS_SUCCESS,
+            payload: res.data,
+        });
+    } catch (err) {
+        dispatch({
+            type: SET_FLEETS_FAIL,
+            error: err.response.data,
+        });
+    }
 };
 
-export const setFleet = () => async (dispatch) => {
+export const setFleet = (userId) => async (dispatch) => {
+    dispatch({ type: LOADING_UI });
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets/${userId}`, config);
+
+        dispatch({
+            type: SET_FLEET_SUCCESS,
+            payload: res.data,
+        });
+    } catch (err) {
+        dispatch({
+            type: SET_FLEET_FAIL,
+            error: err.response.data,
+        });
+    }
 };
 
 export const createFleetPost = (fleetData) => async (dispatch) => {

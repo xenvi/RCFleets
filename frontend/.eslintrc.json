@@ -16,5 +16,8 @@
         "react/forbid-prop-types": "off",
         "consistent-return": "off",
         "array-callback-return": "off"
+    },
+    "parserOptions": {
+      "ecmaVersion": 2020
     }
 }

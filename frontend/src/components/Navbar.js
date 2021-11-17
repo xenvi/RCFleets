@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink, Redirect } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
     Container,
@@ -16,29 +16,34 @@ import {
     DrawerCloseButton,
     Stack,
     Avatar,
-    AiOutlineUser,
     useColorMode,
     useDisclosure,
 } from '@chakra-ui/react';
 import {
     MoonIcon, SunIcon, HamburgerIcon,
 } from '@chakra-ui/icons';
+import { AiOutlineUser, AiTwotoneThunderbolt } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth';
 
-const Navbar = ({ logout, isAuthenticated, user }) => {
+const Navbar = ({
+    logout, isAuthenticated, user, profile,
+}) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toggleMenu = () => onOpen();
+    const history = useHistory();
 
     const handleLogout = (drawerOpen) => {
-        logout();
+        logout(history);
         return drawerOpen && toggleMenu();
     };
 
     const handleProfile = (drawerOpen) => {
-        console.log('handle profile');
-        return drawerOpen && toggleMenu();
+        if (drawerOpen) {
+            toggleMenu();
+        }
+        return history.push(`/user/${user.handle}`);
     };
 
     const guestLinks = (drawerOpen) => (
@@ -66,8 +71,9 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                 </Button>
             </Box>
             <Button variant="ghost" onClick={() => handleProfile(drawerOpen)} mr={['0', '1rem']}>
-                {/* { hasAvatar ? <Avatar name={user.handle} src={user.avatar} /> : <Avatar bg="brand.500" icon={<AiOutlineUser fontSize="1.5rem" />} />} */}
-                {/* <Avatar bg="brand.500" icon={<AiOutlineUser fontSize="1.5rem" />} /> */}
+                { profile?.profile?.avatar
+                    ? (<Avatar name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
+                        : (<Avatar size="sm" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1.5rem" />} />)}
             </Button>
             <Button as={Link} onClick={() => handleLogout(drawerOpen)} variant="brand">
                 Log Out
@@ -82,7 +88,12 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
                         <Link as={RouterLink} to="/">
                             <Heading
                               as="h5"
+                              display="flex"
+                              alignItems="center"
                             >
+                                <Box mr="0.5rem">
+                                    <AiTwotoneThunderbolt />
+                                </Box>
                                 RC Fleets
                             </Heading>
                         </Link>
@@ -125,12 +136,14 @@ const Navbar = ({ logout, isAuthenticated, user }) => {
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
+    profile: state.auth.profile,
     user: state.auth.user,
 });
 
 Navbar.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
 };
 

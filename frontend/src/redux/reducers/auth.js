@@ -14,7 +14,8 @@ import {
     PASSWORD_RESET_CONFIRM_FAIL,
     PASSWORD_RESET_CONFIRM_SUCCESS,
     LOGOUT,
-    SET_PROFILE,
+    SET_PROFILE_SUCCESS,
+    SET_PROFILE_FAIL,
     UNSET_PROFILE,
 } from '../types';
 
@@ -100,16 +101,18 @@ export default (state = initialState, action) => {
             ...state,
             loading: false,
         };
-    case SET_PROFILE:
+    case SET_PROFILE_SUCCESS:
         return {
             ...state,
             profile: action.payload,
             loading: false,
         };
+    case SET_PROFILE_FAIL:
     case UNSET_PROFILE:
         return {
             ...state,
             profile: {},
+            loading: false,
         };
     default:
         return state;
