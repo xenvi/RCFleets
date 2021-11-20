@@ -72,7 +72,7 @@ const Navbar = ({
             </Box>
             <Button variant="ghost" onClick={() => handleProfile(drawerOpen)} mr={['0', '1rem']}>
                 { profile?.profile?.avatar
-                    ? (<Avatar name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
+                    ? (<Avatar size="sm" name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
                         : (<Avatar size="sm" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1.5rem" />} />)}
             </Button>
             <Button as={Link} onClick={() => handleLogout(drawerOpen)} variant="brand">
