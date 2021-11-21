@@ -87,13 +87,29 @@ const theme = extendTheme({
                 },
                 ghost: {
                     borderRadius: '50% 25%',
+                    padding: '0.5rem',
                 },
                 reveal: (props) => ({
                     backgroundColor: mode('slateGray.50', 'slateGray.300')(props),
                 }),
+                fullLeftAlign: (props) => ({
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    padding: '1rem',
+                    fontSize: '0.9rem',
+                    borderRadius: 'none',
+                    _hover: {
+                        backgroundColor: mode('slateGray.50', 'slateGray.600')(props),
+                    },
+                }),
             },
         },
         Input: {
+            defaultProps: {
+                focusBorderColor: 'brand.500',
+            },
+        },
+        NumberInput: {
             defaultProps: {
                 focusBorderColor: 'brand.500',
             },
@@ -152,6 +168,13 @@ const theme = extendTheme({
                 },
                 featuredCard: {
                     boxShadow: '0 0.5rem 1.5rem brand.300',
+                },
+            },
+        },
+        Popover: {
+            baseStyle: {
+                closeButton: {
+                    borderRadius: '50% 25%',
                 },
             },
         },

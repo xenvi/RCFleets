@@ -24,7 +24,7 @@ const EditModal = () => {
                     <ModalHeader>Modal Title</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        <Lorem count={2} />
+                        todo
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={onClose}>Close</Button>

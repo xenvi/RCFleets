@@ -16,68 +16,106 @@ import {
     DrawerCloseButton,
     Stack,
     Avatar,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverBody,
+    PopoverFooter,
+    PopoverArrow,
     useColorMode,
     useDisclosure,
 } from '@chakra-ui/react';
 import {
-    MoonIcon, SunIcon, HamburgerIcon,
+    MoonIcon, SunIcon, HamburgerIcon, SettingsIcon,
 } from '@chakra-ui/icons';
 import { AiOutlineUser, AiTwotoneThunderbolt } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth';
+import CreateModal from './CreateModal';
 
 const Navbar = ({
     logout, isAuthenticated, user, profile,
 }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const toggleMenu = () => onOpen();
     const history = useHistory();
 
-    const handleLogout = (drawerOpen) => {
+    const handleLogout = () => {
         logout(history);
-        return drawerOpen && toggleMenu();
+        return isOpen && onClose();
     };
 
-    const handleProfile = (drawerOpen) => {
-        if (drawerOpen) {
-            toggleMenu();
-        }
-        return history.push(`/user/${user.handle}`);
+    const handleProfileClick = () => {
+        history.push(`/user/${profile.handle}`);
+        return isOpen && onClose();
     };
 
-    const guestLinks = (drawerOpen) => (
+    const guestLinks = () => (
         <>
             <Box display={['block', 'inline-block']} m="auto">
                 <Button variant="ghost" onClick={toggleColorMode} mr={['0', '1rem']}>
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
             </Box>
-            <Box display={['block', 'inline-block']} m="auto">
-                <Button as={RouterLink} to="/login" onClick={() => drawerOpen && toggleMenu()} colorScheme="slateGray" mr={['0', '1rem']}>
-                    Log In
-                </Button>
-            </Box>
-            <Button as={RouterLink} to="/signup" onClick={() => drawerOpen && toggleMenu()} variant="brand">
+            <Button as={RouterLink} to="/login" onClick={() => isOpen && onClose()} colorScheme="slateGray" mr={['0', '1rem']} size="sm">
+                Log In
+            </Button>
+            <Button as={RouterLink} to="/signup" onClick={() => isOpen && onClose()} variant="brand" size="sm">
                 Sign Up
             </Button>
         </>
     );
-    const authLinks = (drawerOpen) => (
+    const authLinks = () => (
         <>
-            <Box display={['block', 'inline-block']} m="auto">
-                <Button variant="ghost" onClick={toggleColorMode} mr={['0', '0.5rem']}>
+            <Box display={['block', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
+                <Button variant="ghost" onClick={toggleColorMode}>
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                 </Button>
             </Box>
-            <Button variant="ghost" onClick={() => handleProfile(drawerOpen)} mr={['0', '1rem']}>
-                { profile?.profile?.avatar
-                    ? (<Avatar size="sm" name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
-                        : (<Avatar size="sm" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1.5rem" />} />)}
-            </Button>
-            <Button as={Link} onClick={() => handleLogout(drawerOpen)} variant="brand">
-                Log Out
-            </Button>
+            <Box display={['block', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
+                <CreateModal />
+            </Box>
+            <Box display={['block', 'none']} m={['0.75rem auto !important', '0 0.25rem !important']}>
+                <Button variant="ghost" onClick={() => handleProfileClick()}>
+                    { profile?.profile?.avatar
+                        ? (<Avatar size="sm" name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
+                            : (<Avatar size="sm" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1rem" />} />)}
+                </Button>
+            </Box>
+            <Box display={['none', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
+                <Popover
+                  placement="bottom-end"
+                  colorScheme="dark"
+                >
+                    <PopoverTrigger>
+                        <Button variant="ghost">
+                            { profile?.profile?.avatar
+                                ? (<Avatar size="xs" name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
+                                    : (<Avatar size="xs" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1rem" />} />)}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverBody p="0">
+                            <Button onClick={() => handleProfileClick()} variant="fullLeftAlign">
+                                <Box mr="1rem">
+                                    <AiOutlineUser fontSize="1rem" />
+                                </Box>
+                                Profile
+                            </Button>
+                            <Button variant="fullLeftAlign">
+                                <SettingsIcon mr="1rem" />
+                                Settings
+                            </Button>
+                        </PopoverBody>
+                        <PopoverFooter p="0">
+                            <Button onClick={() => handleLogout()} variant="fullLeftAlign">
+                                Log Out
+                            </Button>
+                        </PopoverFooter>
+                    </PopoverContent>
+                </Popover>
+            </Box>
         </>
     );
     return (
@@ -87,7 +125,7 @@ const Navbar = ({
                     <Box>
                         <Link as={RouterLink} to="/">
                             <Heading
-                              as="h5"
+                              as="h6"
                               display="flex"
                               alignItems="center"
                             >
@@ -102,7 +140,7 @@ const Navbar = ({
                     <Spacer />
 
                     <Box display={{ base: 'block', sm: 'none' }}>
-                        <Button variant="ghost" onClick={() => toggleMenu()}>
+                        <Button variant="ghost" onClick={onOpen}>
                             <HamburgerIcon boxSize={5} />
                         </Button>
                     </Box>
@@ -118,8 +156,8 @@ const Navbar = ({
                             <DrawerCloseButton />
 
                             <DrawerBody>
-                                <Stack spacing={6}>
-                                    { isAuthenticated ? authLinks(true) : guestLinks(true) }
+                                <Stack>
+                                    { isAuthenticated ? authLinks() : guestLinks() }
                                 </Stack>
                             </DrawerBody>
                         </DrawerContent>
