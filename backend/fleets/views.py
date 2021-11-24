@@ -9,6 +9,8 @@ class FleetPostListView(ListAPIView):
     serializer_class = FleetPostSerializer
     lookup_field = 'user'
     permission_classes = (permissions.AllowAny, )
+    def get_queryset(self):
+        return FleetPost.objects.order_by('-created_at')
 
 class FleetPostDetailView(ListAPIView):
     serializer_class = FleetPostSerializer
@@ -17,4 +19,4 @@ class FleetPostDetailView(ListAPIView):
 
     # query fleet posts by user id (user param of URL)
     def get_queryset(self):
-        return FleetPost.objects.filter(user__id = self.kwargs['user']).order_by('-featured', 'created_at')
+        return FleetPost.objects.filter(user__id = self.kwargs['user']).order_by('-featured', '-created_at')

@@ -14,11 +14,11 @@ import {
     ALERT_SUCCESS,
     CLEAR_ALERTS,
     CLEAR_ERRORS,
-    LOADING_UI,
+    LOADING_FLEET,
 } from '../types';
 
 export const setFleets = () => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_FLEET });
 
     const config = {
         headers: {
@@ -27,7 +27,7 @@ export const setFleets = () => async (dispatch) => {
     };
 
     try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets/`, config);
 
         dispatch({
             type: SET_FLEETS_SUCCESS,
@@ -36,13 +36,13 @@ export const setFleets = () => async (dispatch) => {
     } catch (err) {
         dispatch({
             type: SET_FLEETS_FAIL,
-            error: err.response.data,
+            error: err,
         });
     }
 };
 
 export const setFleet = (userId) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_FLEET });
 
     const config = {
         headers: {
@@ -60,13 +60,13 @@ export const setFleet = (userId) => async (dispatch) => {
     } catch (err) {
         dispatch({
             type: SET_FLEET_FAIL,
-            error: err.response.data,
+            error: err,
         });
     }
 };
 
 export const createFleetPost = (fleetData) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_FLEET });
 
     const config = {
         headers: {
@@ -92,7 +92,7 @@ export const createFleetPost = (fleetData) => async (dispatch) => {
 };
 
 export const updateFleetPost = (userId, fleetData) => async (dispatch) => {
-    // dispatch({ type: LOADING_UI });
+    // dispatch({ type: LOADING_FLEET });
 
     // const config = {
     //     headers: {

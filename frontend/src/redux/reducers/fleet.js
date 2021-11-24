@@ -10,6 +10,7 @@ import {
     UPDATE_FLEET_POST_FAIL,
     DELETE_FLEET_POST_SUCCESS,
     DELETE_FLEET_POST_FAIL,
+    LOADING_FLEET,
 } from '../types';
 
 const initialState = {
@@ -72,6 +73,11 @@ export default (state = initialState, action) => {
         return {
             ...state,
             currentFleet: [],
+        };
+    case LOADING_FLEET:
+        return {
+            ...state,
+            loading: false,
         };
     case DELETE_FLEET_POST_FAIL:
     case UPDATE_FLEET_POST_FAIL:

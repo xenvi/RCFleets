@@ -9,7 +9,8 @@ class FleetInfoSerializer(serializers.ModelSerializer):
 
 class FleetPostSerializer(serializers.ModelSerializer):
     info = FleetInfoSerializer()
+    handle = serializers.ReadOnlyField()
     class Meta:
         model = FleetPost
         fields = '__all__'
-        extra_fields = ['info']
+        extra_fields = ['info', 'handle']

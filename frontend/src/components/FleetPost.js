@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import {
     Flex,
     Grid,
@@ -7,18 +9,43 @@ import {
     SlideFade,
     Button,
     Image,
+    Link,
     Heading,
     Text,
+    Divider,
     useColorMode,
 } from '@chakra-ui/react';
 import {
     EditIcon,
     StarIcon,
 } from '@chakra-ui/icons';
-import { formatFieldLabel, formatFieldValue } from '../util/schema';
+import { formatFieldLabel, formatFieldValue, formatTimeAgo } from '../util/schema';
+import ProfileAvatar from './Avatar';
 
-const FleetPost = ({ vehicle, isAuthProfile }) => {
+const FleetPost = ({
+    vehicle, isAuthProfile, showUserDetails,
+}) => {
     const { colorMode } = useColorMode();
+    const [postProfile, setPostProfile] = useState({});
+
+    useEffect(async () => {
+        if (showUserDetails) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            };
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${vehicle.handle}`, config);
+                setPostProfile(res.data);
+            } catch {
+                console.log('err post profile');
+            }
+        }
+    }, []);
+
+    // TODO: create expandable prop
 
     const toggleEdit = () => {
         // TODO
@@ -33,14 +60,14 @@ const FleetPost = ({ vehicle, isAuthProfile }) => {
             const handleOnClick = isAuthProfile ? toggleFeatured(vehicle.featured) : null;
             return (
                 <Button variant="ghost" onClick={() => handleOnClick}>
-                    <StarIcon color="brand.400" textShadow="0 0 1rem red" boxSize={5} />
+                    <StarIcon color="brand.400" textShadow="0 0 1rem red" />
                 </Button>
             );
         }
         if (isAuthProfile) {
             return (
                 <Button variant="ghost" onClick={() => toggleFeatured(vehicle.featured)}>
-                    <StarIcon boxSize={5} />
+                    <StarIcon />
                 </Button>
             );
         }
@@ -53,24 +80,43 @@ const FleetPost = ({ vehicle, isAuthProfile }) => {
             <Flex
               direction="column"
               borderRadius="md"
-              padding={['1rem', '1.5rem']}
               bg={colorMode === 'light' ? 'slateGray.50' : 'slateGray.700'}
               variant={vehicle.featured ? 'featuredCard' : 'card'}
             >
-                <Flex justifyContent="space-between" pb="1rem">
+                { showUserDetails && (
+                    <>
+                        <Flex alignItems="center" justifyContent="space-between" width="100%" p="1rem">
+                            <Flex alignItems="center">
+                                <Link as={RouterLink} to={`/user/${postProfile.handle}`}>
+                                    <ProfileAvatar profile={postProfile} size="sm" />
+                                </Link>
+                                <Link as={RouterLink} to={`/user/${postProfile.handle}`}>
+                                    <Heading as="h6" size="md">
+                                        {postProfile.handle}
+                                    </Heading>
+                                </Link>
+                            </Flex>
+                            <Text fontSize="xs">
+                                { formatTimeAgo(vehicle.created_at) }
+                            </Text>
+                        </Flex>
+                        <Divider colorScheme="brand" />
+                    </>
+                )}
+                <Flex justifyContent="space-between" p="1rem">
                     <Heading as="h3" size="lg">{vehicle.title}</Heading>
                     <Flex alignItems="center">
-                        { renderFeaturedButton(vehicle) }
+                        { !showUserDetails && renderFeaturedButton(vehicle) }
                         { isAuthProfile && (
                             <Button variant="ghost" onClick={() => toggleEdit()}>
-                                <EditIcon boxSize={5} />
+                                <EditIcon />
                             </Button>
                          )}
                     </Flex>
                 </Flex>
                 { vehicle.thumbnail && <Image src={vehicle.thumbnail} alt={vehicle.title} /> }
 
-                <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} paddingTop="1rem">
+                <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} p="1rem">
                     { Object.entries(vehicle.info).map((field) => {
                         const label = formatFieldLabel(field[0]);
                         const value = formatFieldValue(field[0], field[1]);
@@ -95,8 +141,14 @@ const FleetPost = ({ vehicle, isAuthProfile }) => {
     );
 };
 
+FleetPost.defaultProps = {
+    isAuthProfile: false,
+    showUserDetails: false,
+};
+
 FleetPost.propTypes = {
-    isAuthProfile: PropTypes.bool.isRequired,
+    isAuthProfile: PropTypes.bool,
+    showUserDetails: PropTypes.bool,
     vehicle: PropTypes.object.isRequired,
 };
 

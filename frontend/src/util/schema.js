@@ -1,3 +1,9 @@
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en.json';
+
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo('en-US');
+
 const fleetPostFields = [
     {
         label: 'title',
@@ -95,8 +101,11 @@ const formatFieldValue = (label, value) => {
     }
 };
 
+const formatTimeAgo = (datetime) => timeAgo.format(new Date(datetime)).toUpperCase();
+
 export {
     fleetPostFields,
     formatFieldLabel,
     formatFieldValue,
+    formatTimeAgo,
 };

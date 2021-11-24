@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class FleetPost(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user")
     title = models.CharField(max_length=100)
     thumbnail = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
     featured = models.BooleanField(default=False)
@@ -23,6 +23,9 @@ class FleetPost(models.Model):
                 pass
 
         super(FleetPost, self).save(*args, **kwargs)
+
+    def handle(self):
+        return self.user.handle
 
     def __str__(self):
         return str(self.id)

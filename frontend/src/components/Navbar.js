@@ -32,9 +32,10 @@ import { AiOutlineUser, AiTwotoneThunderbolt } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth';
 import CreateModal from './CreateModal';
+import ProfileAvatar from './Avatar';
 
 const Navbar = ({
-    logout, isAuthenticated, user, profile,
+    logout, isAuthenticated, user, authProfile,
 }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,7 +47,7 @@ const Navbar = ({
     };
 
     const handleProfileClick = () => {
-        history.push(`/user/${profile.handle}`);
+        history.push(`/user/${authProfile.handle}`);
         return isOpen && onClose();
     };
 
@@ -77,9 +78,7 @@ const Navbar = ({
             </Box>
             <Box display={['block', 'none']} m={['0.75rem auto !important', '0 0.25rem !important']}>
                 <Button variant="ghost" onClick={() => handleProfileClick()}>
-                    { profile?.profile?.avatar
-                        ? (<Avatar size="sm" name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
-                            : (<Avatar size="sm" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1rem" />} />)}
+                    <ProfileAvatar user={user} profile={authProfile} size="sm" marginRight={['0']} />
                 </Button>
             </Box>
             <Box display={['none', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
@@ -89,9 +88,7 @@ const Navbar = ({
                 >
                     <PopoverTrigger>
                         <Button variant="ghost">
-                            { profile?.profile?.avatar
-                                ? (<Avatar size="xs" name={user.handle || 'User Avatar'} src={profile.profile.avatar} />)
-                                    : (<Avatar size="xs" bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize="1rem" />} />)}
+                            <ProfileAvatar user={user} profile={authProfile} size="xs" marginRight={['0']} />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent>
@@ -174,14 +171,14 @@ const Navbar = ({
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    profile: state.auth.profile,
+    authProfile: state.auth.authProfile,
     user: state.auth.user,
 });
 
 Navbar.propTypes = {
+    authProfile: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
 };
 

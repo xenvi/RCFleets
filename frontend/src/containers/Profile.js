@@ -23,13 +23,14 @@ import { AiOutlineTable } from 'react-icons/ai';
 
 import ProfileAvatar from '../components/Avatar';
 import FleetPost from '../components/FleetPost';
-import { setProfile } from '../redux/actions/auth';
+import FleetPostSkeleton from '../components/FleetPostSkeleton';
+import { setProfile, unsetProfile } from '../redux/actions/auth';
 import { setFleet } from '../redux/actions/fleet';
 
 const Profile = ({
-    match, user, loading, profile, setProfile, currentFleet, setFleet,
+    match, user, loading, profile, setProfile, unsetProfile, currentFleet, setFleet,
 }) => {
-    const [isAuthProfile, setIsAuthProfile] = useState([]);
+    const [isAuthProfile, setIsAuthProfile] = useState(false);
     const [error, setError] = useState([]);
 
     useEffect(() => {
@@ -39,6 +40,10 @@ const Profile = ({
         if (handle === user?.handle) {
             setIsAuthProfile(true);
         }
+
+        return () => {
+            unsetProfile();
+        };
     }, []);
 
     useEffect(() => {
@@ -51,12 +56,6 @@ const Profile = ({
     // TODO: add error state and display error msg if data fails
 
     const renderSkeletonProfile = () => (
-        <SimpleGrid columns={['1', '1', '2']} spacing={10}>
-            <Skeleton height="50px" />
-            <Skeleton height="50px" />
-        </SimpleGrid>
-    );
-    const renderSkeletonFleet = () => (
         <SimpleGrid columns={['1', '1', '2']} spacing={10}>
             <Skeleton height="50px" />
             <Skeleton height="50px" />
@@ -92,8 +91,8 @@ const Profile = ({
                         <Text>
                             {profile.profile?.bio}
                         </Text>
-                        <Text as="em">
-                            {`Joined ${formattedDate}`}
+                        <Text as="em" fontSize="xs">
+                            {`Joined ${formattedDate}`.toUpperCase()}
                         </Text>
                     </Stack>
                 </GridItem>
@@ -123,7 +122,7 @@ const Profile = ({
             <TabPanels>
                 <TabPanel padding="1rem 0">
                     {
-                        currentFleet ? renderFleet() : renderSkeletonFleet()
+                        currentFleet ? renderFleet() : <FleetPostSkeleton />
                     }
                 </TabPanel>
             </TabPanels>
@@ -156,7 +155,8 @@ Profile.propTypes = {
     profile: PropTypes.object.isRequired,
     setFleet: PropTypes.func.isRequired,
     setProfile: PropTypes.func.isRequired,
+    unsetProfile: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { setProfile, setFleet })(Profile);
+export default connect(mapStateToProps, { setProfile, unsetProfile, setFleet })(Profile);

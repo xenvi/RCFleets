@@ -55,15 +55,12 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", primary_key=True)
     bio = models.CharField(max_length=150, blank=True, null=True)
     avatar = models.ImageField(upload_to='images', blank=True)
-    
-    def get_bio(self):
-        return self.bio
 
-    def get_avatar(self):
-        return self.avatar
+    def handle(self):
+        return self.user.handle
 
     def __str__(self):
-        return str(self.user)
+        return self.user.handle
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

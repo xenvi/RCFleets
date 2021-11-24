@@ -18,10 +18,12 @@ import {
     ALERT_SUCCESS,
     CLEAR_ALERTS,
     CLEAR_ERRORS,
-    LOADING_UI,
     SET_PROFILE_SUCCESS,
     SET_PROFILE_FAIL,
+    SET_AUTH_PROFILE_SUCCESS,
+    SET_AUTH_PROFILE_FAIL,
     UNSET_PROFILE,
+    LOADING_AUTH,
 } from '../types';
 
 export const showAlert = (message) => async (dispatch) => {
@@ -43,7 +45,7 @@ export const clearAlerts = () => async (dispatch) => {
 };
 
 export const setProfile = (handle) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_AUTH });
 
     const config = {
         headers: {
@@ -61,6 +63,29 @@ export const setProfile = (handle) => async (dispatch) => {
     } catch (err) {
         dispatch({
             type: SET_PROFILE_FAIL,
+        });
+    }
+};
+
+export const setAuthProfile = (handle) => async (dispatch) => {
+    dispatch({ type: LOADING_AUTH });
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
+    };
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${handle}`, config);
+
+        dispatch({
+            type: SET_AUTH_PROFILE_SUCCESS,
+            payload: res.data,
+        });
+    } catch (err) {
+        dispatch({
+            type: SET_AUTH_PROFILE_FAIL,
         });
     }
 };
@@ -125,7 +150,7 @@ export const loadUser = () => async (dispatch) => {
                 payload: res.data,
             });
 
-            dispatch(setProfile(res.data.handle));
+            dispatch(setAuthProfile(res.data.handle));
         } catch (err) {
             dispatch({
                 type: USER_LOADED_FAIL,
@@ -140,7 +165,7 @@ export const loadUser = () => async (dispatch) => {
 };
 
 export const login = (email, password, history) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_AUTH });
 
     const config = {
         headers: {
@@ -170,7 +195,7 @@ export const login = (email, password, history) => async (dispatch) => {
 };
 
 export const signup = (handle, email, password, rePassword, history) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_AUTH });
 
     const config = {
         headers: {
@@ -200,7 +225,7 @@ export const signup = (handle, email, password, rePassword, history) => async (d
 };
 
 export const verify = (uid, token, history) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_AUTH });
 
     const config = {
         headers: {
@@ -238,7 +263,7 @@ export const logout = (history) => async (dispatch) => {
 };
 
 export const resetPassword = (email, history) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_AUTH });
 
     const config = {
         headers: {
@@ -264,7 +289,7 @@ export const resetPassword = (email, history) => async (dispatch) => {
 };
 
 export const resetPasswordConfirm = (uid, token, newPassword, reNewPassword, history) => async (dispatch) => {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_AUTH });
 
     const config = {
         headers: {

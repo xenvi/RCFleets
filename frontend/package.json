@@ -15,6 +15,7 @@
     "eslint": "^7.11.0",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
+    "javascript-time-ago": "^2.3.10",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
