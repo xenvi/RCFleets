@@ -4,7 +4,7 @@ from django.conf import settings
 class FleetPost(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user")
     title = models.CharField(max_length=100)
-    thumbnail = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
+    thumbnail = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True, null=True)
     featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -2,15 +2,22 @@
     "cSpell.words": [
         "apos",
         "chakra",
+        "csrfmiddlewaretoken",
+        "csrftoken",
+        "datetime",
         "djoser",
         "dotenv",
+        "dropzone",
         "fleetpost",
         "fleetposts",
         "gmail",
         "linebreak",
         "Lipo",
+        "plusplus",
         "rcfleets",
         "simplejwt",
-        "Twotone"
+        "slategray",
+        "Twotone",
+        "unstyled"
     ]
 }

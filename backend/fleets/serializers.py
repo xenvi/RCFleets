@@ -14,3 +14,16 @@ class FleetPostSerializer(serializers.ModelSerializer):
         model = FleetPost
         fields = '__all__'
         extra_fields = ['info', 'handle']
+
+    def create(self, validated_data):
+        info_validated_data = validated_data.pop('info', None)
+        print('validated_data', validated_data)
+        fleetpost = FleetPost.objects.create(**validated_data)
+        FleetInfo.objects.create(fleetpost_id=fleetpost.id, **info_validated_data)
+        return fleetpost
+
+    # def update(self, instance, validated_data):
+    #     instance.save()
+    #     nested_instance = instance.info
+    #     nested_instance.save()
+    #     return super(FleetPostSerializer, self).update(instance, validated_data)

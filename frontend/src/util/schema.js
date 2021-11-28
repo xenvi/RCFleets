@@ -16,58 +16,72 @@ const fleetPostFields = [
     {
         label: 'modelName',
         type: 'text',
+        info: true,
     },
     {
         label: 'personalBestSpeed',
         type: 'decimal',
+        info: true,
     },
     {
         label: 'tires',
         type: 'text',
+        info: true,
     },
     {
         label: 'receiver',
         type: 'text',
+        info: true,
     },
     {
         label: 'pinionGearSize',
         type: 'number',
+        info: true,
     },
     {
         label: 'spurGearSize',
         type: 'number',
+        info: true,
     },
     {
         label: 'avgMotorTemp',
         type: 'decimal',
+        info: true,
     },
     {
         label: 'avgEscTemp',
         type: 'decimal',
+        info: true,
     },
     {
         label: 'lipoCell',
         type: 'number',
+        info: true,
     },
     {
         label: 'shockOilViscosityFront',
         type: 'number',
+        info: true,
     },
     {
         label: 'shockOilViscosityRear',
         type: 'number',
+        info: true,
     },
     {
         label: 'diffOilViscosityFront',
         type: 'number',
+        info: true,
     },
     {
         label: 'diffOilViscosityCenter',
         type: 'number',
+        info: true,
     },
     {
         label: 'diffOilViscosityRear',
         type: 'number',
+        info: true,
     },
     {
         label: 'featured',
@@ -77,8 +91,30 @@ const fleetPostFields = [
 
 const formatFieldLabel = (label) => (label.replace(/([A-Z])/g, ' $1').trim().toUpperCase());
 
+const formatFieldLabelUnit = (label) => {
+    switch (label) {
+    case 'personalBestSpeed':
+        return '(mph)';
+    case 'pinionGearSize':
+    case 'spurGearSize':
+        return '(T)';
+    case 'avgMotorTemp':
+    case 'avgEscTemp':
+        return '(\u00B0F)';
+    case 'lipoCell':
+        return '(S)';
+    case 'shockOilViscosityFront':
+    case 'shockOilViscosityRear':
+    case 'diffOilViscosityFront':
+    case 'diffOilViscosityCenter':
+    case 'diffOilViscosityRear':
+        return '(cSt)';
+    default:
+        return '';
+    }
+};
+
 const formatFieldValue = (label, value) => {
-    // TODO: create util file to dynamically switch through database fields in one location
     switch (label) {
     case 'personalBestSpeed':
         return `${value} mph`;
@@ -106,6 +142,7 @@ const formatTimeAgo = (datetime) => timeAgo.format(new Date(datetime)).toUpperCa
 export {
     fleetPostFields,
     formatFieldLabel,
+    formatFieldLabelUnit,
     formatFieldValue,
     formatTimeAgo,
 };

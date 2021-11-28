@@ -117,7 +117,7 @@ const FleetPost = ({
                 { vehicle.thumbnail && <Image src={vehicle.thumbnail} alt={vehicle.title} /> }
 
                 <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} p="1rem">
-                    { Object.entries(vehicle.info).map((field) => {
+                    { vehicle.info && Object.entries(vehicle.info).map((field) => {
                         const label = formatFieldLabel(field[0]);
                         const value = formatFieldValue(field[0], field[1]);
                         return (

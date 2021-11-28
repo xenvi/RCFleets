@@ -15,7 +15,9 @@ import {
     CLEAR_ALERTS,
     CLEAR_ERRORS,
     LOADING_FLEET,
+    RESET_CREATE_STATUS,
 } from '../types';
+import getCookie from '../../util/getCookie';
 
 export const setFleets = () => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
@@ -68,21 +70,24 @@ export const setFleet = (userId) => async (dispatch) => {
 export const createFleetPost = (fleetData) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
+    const csrftoken = getCookie('csrftoken');
     const config = {
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'X-CSRFToken': csrftoken,
         },
     };
 
-    const body = JSON.stringify(fleetData);
+    const body = fleetData;
 
     try {
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/fleets/fleetpost/add/`, body, config);
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/fleets/create/`, body, config);
 
         dispatch({
             type: CREATE_FLEET_POST_SUCCESS,
-            payload: res.data,
         });
+
+        dispatch(setFleets());
     } catch (err) {
         dispatch({
             type: CREATE_FLEET_POST_FAIL,
@@ -120,6 +125,12 @@ export const updateFleetPost = (userId, fleetData) => async (dispatch) => {
 export const unsetFleet = () => (dispatch) => {
     dispatch({
         type: UNSET_FLEET,
+    });
+};
+
+export const resetCreateStatus = () => (dispatch) => {
+    dispatch({
+        type: RESET_CREATE_STATUS,
     });
 };
 
