@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from fleets.models import FleetPost
 from fleets.serializers import FleetPostSerializer
 
@@ -27,8 +27,18 @@ class CreateFleetPostView(CreateAPIView):
 
 class UpdateFleetPostView(RetrieveUpdateAPIView):
     serializer_class = FleetPostSerializer
+    lookup_field = 'id'
     permission_classes = (permissions.AllowAny, )
 
     # query fleet post by fleetpost id (id param of URL)
     def get_queryset(self):
-        return FleetPost.objects.filter(id = self.kwargs['pk'])
+        return FleetPost.objects.filter(id = self.kwargs['id'])
+
+class DeleteFleetPostView(DestroyAPIView):
+    serializer_class = FleetPostSerializer
+    lookup_field = 'id'
+    permission_classes = (permissions.AllowAny, )
+
+    # query fleet post by fleetpost id (id param of URL)
+    def get_queryset(self):
+        return FleetPost.objects.filter(id = self.kwargs['id'])

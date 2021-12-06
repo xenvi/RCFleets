@@ -37,15 +37,15 @@ import {
 import CSRFToken from '../util/csrfToken';
 import { createFleetPost, resetCreateStatus } from '../redux/actions/fleet';
 import ProfileAvatar from './Avatar';
+import SpeedbumpModal from './SpeedbumpModal';
 
 const CreateModal = ({
     profile, user, createFleetPost, loading, createSuccess, resetCreateStatus,
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [values, setValues] = useState({});
     const [thumbnailFile, setThumbnailFile] = useState([]);
-
-    // TODO create warning modal to display on modal onOverlayClick
 
     useEffect(() => {
         // init form fields to state
@@ -222,11 +222,18 @@ const CreateModal = ({
 
     return (
         <>
+            <SpeedbumpModal
+              confirmAction={onClose}
+              headerText="Are you sure you want to exit? Changes will not be saved."
+              isOpen={isOpenSpeedbump}
+              onClose={onCloseSpeedbump}
+            />
+
             <Button variant="ghost" onClick={onOpen}>
                 <PlusSquareIcon boxSize={5} />
             </Button>
 
-            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside">
+            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
                 <ModalOverlay />
                 <ModalContent>
                     { loading && <Progress size="xs" isIndeterminate colorScheme="brand" /> }

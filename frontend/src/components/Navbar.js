@@ -15,7 +15,6 @@ import {
     DrawerContent,
     DrawerCloseButton,
     Stack,
-    Avatar,
     Popover,
     PopoverTrigger,
     PopoverContent,

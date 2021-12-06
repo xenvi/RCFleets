@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import axios from 'axios';
 import {
     Flex,
@@ -13,19 +14,30 @@ import {
     Heading,
     Text,
     Divider,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverBody,
+    PopoverFooter,
+    PopoverArrow,
+    useDisclosure,
     useColorMode,
 } from '@chakra-ui/react';
 import {
     EditIcon,
     StarIcon,
 } from '@chakra-ui/icons';
+import { AiOutlineMore } from 'react-icons/ai';
 import { formatFieldLabel, formatFieldValue, formatTimeAgo } from '../util/schema';
 import ProfileAvatar from './Avatar';
+import SpeedbumpModal from './SpeedbumpModal';
+import { deleteFleetPost } from '../redux/actions/fleet';
 
 const FleetPost = ({
-    vehicle, isAuthProfile, showUserDetails,
+    vehicle, isAuthProfile, showUserDetails, deleteFleetPost,
 }) => {
     const { colorMode } = useColorMode();
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [postProfile, setPostProfile] = useState({});
 
     useEffect(async () => {
@@ -75,8 +87,19 @@ const FleetPost = ({
         return null;
     };
 
+    const confirmAction = () => {
+        deleteFleetPost(vehicle.id, vehicle.user);
+    };
+
     return (
         <SlideFade in offsetY="4rem">
+            <SpeedbumpModal
+              confirmAction={confirmAction}
+              headerText="Are you sure you want to delete post?"
+              confirmText="Yes, DELETE"
+              isOpen={isOpen}
+              onClose={onClose}
+            />
             <Flex
               direction="column"
               borderRadius="md"
@@ -108,10 +131,32 @@ const FleetPost = ({
                     <Flex alignItems="center">
                         { !showUserDetails && renderFeaturedButton(vehicle) }
                         { isAuthProfile && (
-                            <Button variant="ghost" onClick={() => toggleEdit()}>
-                                <EditIcon />
-                            </Button>
-                         )}
+                            <Popover
+                              placement="bottom-end"
+                              colorScheme="dark"
+                              size="xs"
+                            >
+                                <PopoverTrigger>
+                                    <Button variant="ghost">
+                                        <AiOutlineMore fontSize="1.25rem" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                    <PopoverArrow />
+                                    <PopoverBody p="0">
+                                        <Button onClick={() => toggleEdit()} variant="fullLeftAlign">
+                                            <EditIcon mr="1rem" />
+                                            Edit Post
+                                        </Button>
+                                    </PopoverBody>
+                                    <PopoverFooter p="0">
+                                        <Button onClick={() => onOpen()} variant="fullLeftAlign">
+                                            Delete Post
+                                        </Button>
+                                    </PopoverFooter>
+                                </PopoverContent>
+                            </Popover>
+                            )}
                     </Flex>
                 </Flex>
                 { vehicle.thumbnail && <Image src={vehicle.thumbnail} alt={vehicle.title} /> }
@@ -147,9 +192,10 @@ FleetPost.defaultProps = {
 };
 
 FleetPost.propTypes = {
+    deleteFleetPost: PropTypes.func.isRequired,
     isAuthProfile: PropTypes.bool,
     showUserDetails: PropTypes.bool,
     vehicle: PropTypes.object.isRequired,
 };
 
-export default FleetPost;
+export default connect(null, { deleteFleetPost })(FleetPost);

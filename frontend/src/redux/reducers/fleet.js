@@ -80,7 +80,6 @@ export default (state = initialState, action) => {
     case DELETE_FLEET_POST_SUCCESS:
         return {
             ...state,
-            currentFleet: [],
         };
     case LOADING_FLEET:
         return {

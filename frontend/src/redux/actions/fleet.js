@@ -96,30 +96,60 @@ export const createFleetPost = (fleetData) => async (dispatch) => {
     }
 };
 
-export const updateFleetPost = (userId, fleetData) => async (dispatch) => {
-    // dispatch({ type: LOADING_FLEET });
+export const updateFleetPost = (fleetId) => async (dispatch) => {
+    dispatch({ type: LOADING_FLEET });
 
-    // const config = {
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    // };
+    const csrftoken = getCookie('csrftoken');
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-CSRFToken': csrftoken,
+        },
+    };
 
-    // const body = JSON.stringify(fleetData);
+    const body = fleetData;
 
-    // try {
-    //     const res = await axios.post(`${process.env.REACT_APP_API_URL}/fleets/fleetpost/${userId}/change/`, body, config);
+    try {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/fleets/update/${fleetId}`, body, config);
 
-    //     dispatch({
-    //         type: UPDATE_FLEET_POST_SUCCESS,
-    //         payload: res.data,
-    //     });
-    // } catch (err) {
-    //     dispatch({
-    //         type: UPDATE_FLEET_POST_FAIL,
-    //         error: err.response.data,
-    //     });
-    // }
+        dispatch({
+            type: CREATE_FLEET_POST_SUCCESS,
+        });
+
+        dispatch(setFleets());
+    } catch (err) {
+        dispatch({
+            type: CREATE_FLEET_POST_FAIL,
+            error: err.response.data,
+        });
+    }
+};
+
+export const deleteFleetPost = (fleetId, userId) => async (dispatch) => {
+    dispatch({ type: LOADING_FLEET });
+
+    const csrftoken = getCookie('csrftoken');
+    const config = {
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+    };
+
+    try {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/fleets/delete/${fleetId}`, config);
+
+        dispatch({
+            type: DELETE_FLEET_POST_SUCCESS,
+        });
+
+        dispatch(setFleets());
+        dispatch(setFleet(userId));
+    } catch (err) {
+        dispatch({
+            type: DELETE_FLEET_POST_FAIL,
+            error: err.response.data,
+        });
+    }
 };
 
 export const unsetFleet = () => (dispatch) => {
@@ -131,11 +161,5 @@ export const unsetFleet = () => (dispatch) => {
 export const resetCreateStatus = () => (dispatch) => {
     dispatch({
         type: RESET_CREATE_STATUS,
-    });
-};
-
-export const deleteFleetPost = () => (dispatch) => {
-    dispatch({
-        type: DELETE_FLEET_POST_SUCCESS,
     });
 };

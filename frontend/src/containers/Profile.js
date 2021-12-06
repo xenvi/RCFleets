@@ -36,15 +36,20 @@ const Profile = ({
     useEffect(() => {
         const { handle } = match.params;
         setProfile(handle);
-
-        if (handle === user?.handle) {
-            setIsAuthProfile(true);
-        }
+        console.log('profile', profile);
 
         return () => {
             unsetProfile();
         };
     }, []);
+
+    useEffect(() => {
+        const { handle } = match.params;
+        console.log('user', user);
+        if (handle === user?.handle) {
+            setIsAuthProfile(true);
+        }
+    }, [user]);
 
     useEffect(() => {
         if (Object.keys(profile).length !== 0) {
@@ -103,14 +108,14 @@ const Profile = ({
     const renderFleet = () => (
         <SimpleGrid columns={['1', '1', '2']} spacing={10}>
             {
-                currentFleet && currentFleet.map((vehicle) => (
+                currentFleet.map((vehicle) => (
                     <FleetPost vehicle={vehicle} isAuthProfile={isAuthProfile} />
                 ))
             }
         </SimpleGrid>
     );
 
-    const renderTabs = () => (
+    const renderTabs = (currentFleet) => (
         <Tabs align="center" colorScheme="slateGray">
             <TabList mb="1.5rem">
                 <Tab>
@@ -129,13 +134,15 @@ const Profile = ({
         </Tabs>
     );
 
+    console.log('currentFleet', currentFleet);
+
     return (
         <Container maxW="container.lg" p="1.5rem">
             {
                profile ? renderProfile() : renderSkeletonProfile()
             }
             {
-                renderTabs()
+                renderTabs(currentFleet)
             }
         </Container>
     );

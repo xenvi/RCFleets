@@ -17,7 +17,6 @@ class FleetPostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         info_validated_data = validated_data.pop('info', None)
-        print('validated_data', validated_data)
         fleetpost = FleetPost.objects.create(**validated_data)
         FleetInfo.objects.create(fleetpost_id=fleetpost.id, **info_validated_data)
         return fleetpost
