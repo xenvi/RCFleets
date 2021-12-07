@@ -30,7 +30,6 @@ const initialState = {
     alert: null,
     error: null,
     loading: false,
-    authProfile: {},
     profile: {},
 };
 
@@ -89,6 +88,7 @@ export default (state = initialState, action) => {
         return {
             ...state,
             user: null,
+            loading: false,
         };
     case PASSWORD_RESET_FAIL:
     case PASSWORD_RESET_CONFIRM_FAIL:
@@ -116,18 +116,6 @@ export default (state = initialState, action) => {
         return {
             ...state,
             profile: {},
-            loading: false,
-        };
-    case SET_AUTH_PROFILE_SUCCESS:
-        return {
-            ...state,
-            authProfile: action.payload,
-            loading: false,
-        };
-    case SET_AUTH_PROFILE_FAIL:
-        return {
-            ...state,
-            authProfile: {},
             loading: false,
         };
     case LOADING_AUTH:

@@ -67,7 +67,7 @@ export const setFleet = (userId) => async (dispatch) => {
     }
 };
 
-export const createFleetPost = (fleetData) => async (dispatch) => {
+export const createFleetPost = (fleetData, userId) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const csrftoken = getCookie('csrftoken');
@@ -88,6 +88,7 @@ export const createFleetPost = (fleetData) => async (dispatch) => {
         });
 
         dispatch(setFleets());
+        dispatch(setFleet(userId));
     } catch (err) {
         dispatch({
             type: CREATE_FLEET_POST_FAIL,
@@ -96,7 +97,7 @@ export const createFleetPost = (fleetData) => async (dispatch) => {
     }
 };
 
-export const updateFleetPost = (fleetId) => async (dispatch) => {
+export const updateFleetPost = (fleetId, userId) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const csrftoken = getCookie('csrftoken');
@@ -117,6 +118,7 @@ export const updateFleetPost = (fleetId) => async (dispatch) => {
         });
 
         dispatch(setFleets());
+        dispatch(setFleet(userId));
     } catch (err) {
         dispatch({
             type: CREATE_FLEET_POST_FAIL,

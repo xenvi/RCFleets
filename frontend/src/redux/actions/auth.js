@@ -67,29 +67,6 @@ export const setProfile = (handle) => async (dispatch) => {
     }
 };
 
-export const setAuthProfile = (handle) => async (dispatch) => {
-    dispatch({ type: LOADING_AUTH });
-
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-    };
-    try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${handle}`, config);
-
-        dispatch({
-            type: SET_AUTH_PROFILE_SUCCESS,
-            payload: res.data,
-        });
-    } catch (err) {
-        dispatch({
-            type: SET_AUTH_PROFILE_FAIL,
-        });
-    }
-};
-
 export const unsetProfile = () => async (dispatch) => {
     dispatch({
         type: UNSET_PROFILE,
@@ -149,8 +126,6 @@ export const loadUser = () => async (dispatch) => {
                 type: USER_LOADED_SUCCESS,
                 payload: res.data,
             });
-
-            dispatch(setAuthProfile(res.data.handle));
         } catch (err) {
             dispatch({
                 type: USER_LOADED_FAIL,

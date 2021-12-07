@@ -34,7 +34,7 @@ import CreateModal from './CreateModal';
 import ProfileAvatar from './Avatar';
 
 const Navbar = ({
-    logout, isAuthenticated, user, authProfile,
+    logout, isAuthenticated, user,
 }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,7 +46,7 @@ const Navbar = ({
     };
 
     const handleProfileClick = () => {
-        history.push(`/user/${authProfile.handle}`);
+        history.push(`/user/${user.handle}`);
         return isOpen && onClose();
     };
 
@@ -77,7 +77,7 @@ const Navbar = ({
             </Box>
             <Box display={['block', 'none']} m={['0.75rem auto !important', '0 0.25rem !important']}>
                 <Button variant="ghost" onClick={() => handleProfileClick()}>
-                    <ProfileAvatar user={user} profile={authProfile} size="sm" marginRight={['0']} />
+                    <ProfileAvatar user={user} profile={user?.profile} size="sm" marginRight={['0']} />
                 </Button>
             </Box>
             <Box display={['none', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
@@ -87,7 +87,7 @@ const Navbar = ({
                 >
                     <PopoverTrigger>
                         <Button variant="ghost">
-                            <ProfileAvatar user={user} profile={authProfile} size="xs" marginRight={['0']} />
+                            <ProfileAvatar user={user} profile={user?.profile} size="xs" marginRight={['0']} />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent>
@@ -170,12 +170,10 @@ const Navbar = ({
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
-    authProfile: state.auth.authProfile,
     user: state.auth.user,
 });
 
 Navbar.propTypes = {
-    authProfile: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,

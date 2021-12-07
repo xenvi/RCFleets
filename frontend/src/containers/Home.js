@@ -18,7 +18,7 @@ import FleetPost from '../components/FleetPost';
 import { setFleets } from '../redux/actions/fleet';
 
 const Home = ({
-    allFleets, setFleets, loading, user, authProfile,
+    allFleets, setFleets, loading, user,
 }) => {
     const [fleetsData, setFleetsData] = useState([]);
 
@@ -49,10 +49,10 @@ const Home = ({
                     <Box position="sticky" top="100px">
                         { user ? (
                             <Flex alignItems="center">
-                                <Link as={RouterLink} to={`/user/${authProfile.handle}`}>
-                                    <ProfileAvatar user={user} profile={authProfile} size="sm" />
+                                <Link as={RouterLink} to={`/user/${user.handle}`}>
+                                    <ProfileAvatar user={user} profile={user.profile} size="sm" />
                                 </Link>
-                                <Link as={RouterLink} to={`/user/${authProfile.handle}`}>
+                                <Link as={RouterLink} to={`/user/${user.handle}`}>
                                     <Heading as="h6" size="md">
                                         {user.handle}
                                     </Heading>
@@ -71,13 +71,11 @@ const Home = ({
 const mapStateToProps = (state) => ({
     allFleets: state.fleet.allFleets,
     loading: state.fleet.loading,
-    authProfile: state.auth.authProfile,
     user: state.auth.user,
 });
 
 Home.propTypes = {
     allFleets: PropTypes.array.isRequired,
-    authProfile: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     setFleets: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,

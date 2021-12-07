@@ -217,7 +217,7 @@ const CreateModal = ({
             }
         });
 
-        createFleetPost(formData);
+        createFleetPost(formData, user.id);
     };
 
     return (
