@@ -11,7 +11,7 @@ import {
     DELETE_FLEET_POST_SUCCESS,
     DELETE_FLEET_POST_FAIL,
     LOADING_FLEET,
-    RESET_CREATE_STATUS,
+    RESET_STATUS,
 } from '../types';
 
 const initialState = {
@@ -19,7 +19,7 @@ const initialState = {
     error: null,
     allFleets: [],
     currentFleet: [],
-    createSuccess: false,
+    statusSuccess: false,
 };
 
 export default (state = initialState, action) => {
@@ -59,7 +59,7 @@ export default (state = initialState, action) => {
         return {
             ...state,
             loading: false,
-            createSuccess: true,
+            statusSuccess: true,
         };
     case CREATE_FLEET_POST_FAIL:
         return {
@@ -67,15 +67,22 @@ export default (state = initialState, action) => {
             loading: false,
             error,
         };
-    case RESET_CREATE_STATUS:
+    case RESET_STATUS:
         return {
             ...state,
-            createSuccess: false,
+            statusSuccess: false,
         };
     case UPDATE_FLEET_POST_SUCCESS:
         return {
             ...state,
             currentFleet: payload,
+            statusSuccess: true,
+        };
+    case UPDATE_FLEET_POST_FAIL:
+        return {
+            ...state,
+            loading: false,
+            error,
         };
     case DELETE_FLEET_POST_SUCCESS:
         return {
@@ -87,7 +94,6 @@ export default (state = initialState, action) => {
             loading: true,
         };
     case DELETE_FLEET_POST_FAIL:
-    case UPDATE_FLEET_POST_FAIL:
     default:
         return initialState;
     }

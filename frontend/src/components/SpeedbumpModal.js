@@ -8,18 +8,20 @@ import {
     ModalHeader,
     ModalCloseButton,
     ModalBody,
+    Text,
     Flex,
 } from '@chakra-ui/react';
 
 const SpeedbumpModal = ({
-    confirmAction, headerText, confirmText, cancelText, isOpen, onClose,
+    confirmAction, headerText, subText, confirmText, cancelText, isOpen, onClose,
 }) => (
     <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside">
         <ModalOverlay />
         <ModalContent>
-            <ModalHeader textAlign="center" fontSize="1.7rem" mt="1rem">{headerText}</ModalHeader>
+            <ModalHeader textAlign="center" fontSize="2rem" mt="1rem" pb="0.5rem">{headerText}</ModalHeader>
             <ModalCloseButton />
-            <ModalBody p="1rem 1rem 2rem">
+            <ModalBody p="0 1rem 2rem">
+                { subText && <Text fontSize="lg" textAlign="center" mb="1.5rem">{subText}</Text> }
                 <Flex alignItems="center" justifyContent="center">
                     <Button onClick={() => { onClose(); }}>
                         {cancelText}
@@ -35,6 +37,7 @@ const SpeedbumpModal = ({
 SpeedbumpModal.defaultProps = {
     confirmText: 'Yes',
     cancelText: 'No',
+    subText: '',
 };
 
 SpeedbumpModal.propTypes = {
@@ -44,6 +47,7 @@ SpeedbumpModal.propTypes = {
     headerText: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    subText: PropTypes.string,
 };
 
 export default SpeedbumpModal;

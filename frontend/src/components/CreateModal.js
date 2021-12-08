@@ -35,12 +35,12 @@ import {
     fleetPostFields, formatFieldLabel, formatFieldLabelUnit,
 } from '../util/schema';
 import CSRFToken from '../util/csrfToken';
-import { createFleetPost, resetCreateStatus } from '../redux/actions/fleet';
+import { createFleetPost, resetStatus } from '../redux/actions/fleet';
 import ProfileAvatar from './Avatar';
 import SpeedbumpModal from './SpeedbumpModal';
 
 const CreateModal = ({
-    profile, user, createFleetPost, loading, createSuccess, resetCreateStatus,
+    profile, user, createFleetPost, loading, statusSuccess, resetStatus,
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
@@ -91,11 +91,11 @@ const CreateModal = ({
     }, [user]);
 
     useEffect(() => {
-        if (createSuccess) {
+        if (statusSuccess) {
             onClose();
-            resetCreateStatus();
+            resetStatus();
         }
-    }, [createSuccess]);
+    }, [statusSuccess]);
 
     // revokes data uri to avoid memory leak
     useEffect(() => () => {
@@ -208,7 +208,7 @@ const CreateModal = ({
 
         const formData = new FormData();
         Object.entries(values).forEach(([key, value]) => {
-            if (typeof (value) === 'object' && !(value instanceof File)) {
+            if (typeof (value) === 'object') {
                 Object.entries(values[key]).forEach(([subKey, subValue]) => {
                     formData.append(`${key}.${subKey}`, subValue);
                 });
@@ -224,7 +224,8 @@ const CreateModal = ({
         <>
             <SpeedbumpModal
               confirmAction={onClose}
-              headerText="Are you sure you want to exit? Changes will not be saved."
+              headerText="Are you sure you want to exit?"
+              subText="Changes will not be saved."
               isOpen={isOpenSpeedbump}
               onClose={onCloseSpeedbump}
             />
@@ -274,7 +275,7 @@ const CreateModal = ({
 };
 
 const mapStateToProps = (state) => ({
-    createSuccess: state.fleet.createSuccess,
+    statusSuccess: state.fleet.statusSuccess,
     loading: state.fleet.loading,
     profile: state.auth.profile,
     user: state.auth.user,
@@ -282,10 +283,10 @@ const mapStateToProps = (state) => ({
 
 CreateModal.propTypes = {
     createFleetPost: PropTypes.func.isRequired,
-    createSuccess: PropTypes.bool.isRequired,
+    statusSuccess: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     profile: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { createFleetPost, resetCreateStatus })(CreateModal);
+export default connect(mapStateToProps, { createFleetPost, resetStatus })(CreateModal);

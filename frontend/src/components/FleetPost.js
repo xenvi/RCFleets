@@ -31,6 +31,7 @@ import { AiOutlineMore } from 'react-icons/ai';
 import { formatFieldLabel, formatFieldValue, formatTimeAgo } from '../util/schema';
 import ProfileAvatar from './Avatar';
 import SpeedbumpModal from './SpeedbumpModal';
+import EditModal from './EditModal';
 import { deleteFleetPost } from '../redux/actions/fleet';
 
 const FleetPost = ({
@@ -38,6 +39,7 @@ const FleetPost = ({
 }) => {
     const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [postProfile, setPostProfile] = useState({});
 
     useEffect(async () => {
@@ -58,10 +60,6 @@ const FleetPost = ({
     }, []);
 
     // TODO: create expandable prop
-
-    const toggleEdit = () => {
-        // TODO
-    };
 
     const toggleFeatured = async (featured) => {
         // TODO
@@ -97,9 +95,10 @@ const FleetPost = ({
               confirmAction={confirmAction}
               headerText="Are you sure you want to delete post?"
               confirmText="Yes, DELETE"
-              isOpen={isOpen}
-              onClose={onClose}
+              isOpen={isOpenSpeedbump}
+              onClose={onCloseSpeedbump}
             />
+            <EditModal vehicleData={vehicle} isOpen={isOpen} onClose={onClose} />
             <Flex
               direction="column"
               borderRadius="md"
@@ -144,13 +143,13 @@ const FleetPost = ({
                                 <PopoverContent>
                                     <PopoverArrow />
                                     <PopoverBody p="0">
-                                        <Button onClick={() => toggleEdit()} variant="fullLeftAlign">
+                                        <Button onClick={() => onOpen()} variant="fullLeftAlign">
                                             <EditIcon mr="1rem" />
                                             Edit Post
                                         </Button>
                                     </PopoverBody>
                                     <PopoverFooter p="0">
-                                        <Button onClick={() => onOpen()} variant="fullLeftAlign">
+                                        <Button onClick={() => onOpenSpeedbump()} variant="fullLeftAlign">
                                             Delete Post
                                         </Button>
                                     </PopoverFooter>
