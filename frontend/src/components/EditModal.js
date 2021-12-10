@@ -25,14 +25,8 @@ import {
     Flex,
     Progress,
     Box,
-    Editable,
-    EditableInput,
-    EditablePreview,
     useDisclosure,
 } from '@chakra-ui/react';
-import {
-    PlusSquareIcon,
-} from '@chakra-ui/icons';
 import { useDropzone } from 'react-dropzone';
 import {
     fleetPostFields, formatFieldLabel, formatFieldLabelUnit,
@@ -48,8 +42,6 @@ const EditModal = ({
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [values, setValues] = useState({});
     const [thumbnailFile, setThumbnailFile] = useState([]);
-
-    console.log('values', values);
 
     useEffect(() => {
         // init vehicleData to state
@@ -162,6 +154,7 @@ const EditModal = ({
                   size="lg"
                   value={values[field.label]}
                   onChange={(e) => handleChange(field.label, e.target.checked)}
+                  defaultChecked={values[field.label]}
                 />
             );
         case 'file':
@@ -219,15 +212,17 @@ const EditModal = ({
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log('submit values', values);
-
         const formData = new FormData();
         Object.entries(values).forEach(([key, value]) => {
-            if (Object(value) === value) {
+            if (Object(value) === value && !(value instanceof File)) {
                 Object.entries(values[key]).forEach(([subKey, subValue]) => {
                     formData.append(`${key}.${subKey}`, subValue);
                 });
-            } else if (key !== 'thumbnail' && value !== null) {
+            } else {
+                // if thumbnail is null, don't pass to server
+                if (key === 'thumbnail' && value === null) {
+                    return;
+                }
                 formData.append(key, value);
             }
         });

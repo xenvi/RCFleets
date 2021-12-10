@@ -21,7 +21,7 @@ const SpeedbumpModal = ({
             <ModalHeader textAlign="center" fontSize="2rem" mt="1rem" pb="0.5rem">{headerText}</ModalHeader>
             <ModalCloseButton />
             <ModalBody p="0 1rem 2rem">
-                { subText && <Text fontSize="lg" textAlign="center" mb="1.5rem">{subText}</Text> }
+                <Text fontSize="lg" textAlign="center" mb="1.5rem">{subText}</Text>
                 <Flex alignItems="center" justifyContent="center">
                     <Button onClick={() => { onClose(); }}>
                         {cancelText}

@@ -21,9 +21,15 @@ class FleetPostSerializer(serializers.ModelSerializer):
         FleetInfo.objects.create(fleetpost_id=fleetpost.id, **info_validated_data)
         return fleetpost
 
-    # TODO
     def update(self, instance, validated_data):
-        instance.save()
-        nested_instance = instance.info
-        nested_instance.save()
+        print('validated_data', validated_data)
+        if 'info' in validated_data:
+            nested_serializer = self.fields['info']
+            nested_instance = instance.info
+            nested_data = validated_data.pop('info')
+
+            # updates nested serializer (FleetInfo)
+            nested_serializer.update(nested_instance, nested_data)
+
+        # updates main serializer without nested data (FleetPost)
         return super(FleetPostSerializer, self).update(instance, validated_data)

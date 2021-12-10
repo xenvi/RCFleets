@@ -104,7 +104,7 @@ const CreateModal = ({
 
     const handleChange = (label, value) => {
         setValues((currentValues) => {
-            if (label in currentValues.info) {
+            if (label in currentValues?.info) {
                 currentValues.info[label] = value;
             } else {
                 currentValues[label] = value;
@@ -208,7 +208,7 @@ const CreateModal = ({
 
         const formData = new FormData();
         Object.entries(values).forEach(([key, value]) => {
-            if (typeof (value) === 'object') {
+            if (typeof (value) === 'object' && !(value instanceof File)) {
                 Object.entries(values[key]).forEach(([subKey, subValue]) => {
                     formData.append(`${key}.${subKey}`, subValue);
                 });
