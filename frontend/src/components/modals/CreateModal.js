@@ -33,10 +33,10 @@ import {
 import { useDropzone } from 'react-dropzone';
 import {
     fleetPostFields, formatFieldLabel, formatFieldLabelUnit,
-} from '../util/schema';
-import CSRFToken from '../util/csrfToken';
-import { createFleetPost, resetStatus } from '../redux/actions/fleet';
-import ProfileAvatar from './Avatar';
+} from '../../util/schema';
+import CSRFToken from '../../util/csrfToken';
+import { createFleetPost, resetStatus } from '../../redux/actions/fleet';
+import ProfileAvatar from '../Avatar';
 import SpeedbumpModal from './SpeedbumpModal';
 
 const CreateModal = ({

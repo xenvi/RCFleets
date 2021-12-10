@@ -36,7 +36,6 @@ const Profile = ({
     useEffect(() => {
         const { handle } = match.params;
         setProfile(handle);
-        console.log('profile', profile);
 
         return () => {
             unsetProfile();
@@ -45,7 +44,6 @@ const Profile = ({
 
     useEffect(() => {
         const { handle } = match.params;
-        console.log('user', user);
         if (handle === user?.handle) {
             setIsAuthProfile(true);
         }
@@ -133,8 +131,6 @@ const Profile = ({
             </TabPanels>
         </Tabs>
     );
-
-    console.log('currentFleet', currentFleet);
 
     return (
         <Container maxW="container.lg" p="1.5rem">

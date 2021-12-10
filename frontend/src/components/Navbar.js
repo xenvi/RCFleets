@@ -30,7 +30,7 @@ import {
 import { AiOutlineUser, AiTwotoneThunderbolt } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth';
-import CreateModal from './CreateModal';
+import CreateModal from './modals/CreateModal';
 import ProfileAvatar from './Avatar';
 
 const Navbar = ({

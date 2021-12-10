@@ -97,7 +97,7 @@ export const createFleetPost = (fleetData, userId) => async (dispatch) => {
     }
 };
 
-export const updateFleetPost = (fleetData, fleetId, userId) => async (dispatch) => {
+export const updateFleetPost = (fleetData, fleetId, userId, method) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const csrftoken = getCookie('csrftoken');
@@ -111,7 +111,11 @@ export const updateFleetPost = (fleetData, fleetId, userId) => async (dispatch) 
     const body = fleetData;
 
     try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/fleets/update/${fleetId}`, body, config);
+        if (method === 'patch') {
+            await axios.patch(`${process.env.REACT_APP_API_URL}/api/fleets/update/${fleetId}`, body, config);
+        } else {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/fleets/update/${fleetId}`, body, config);
+        }
 
         dispatch({
             type: UPDATE_FLEET_POST_SUCCESS,

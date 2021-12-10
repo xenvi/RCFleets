@@ -30,12 +30,12 @@ import {
 import { AiOutlineMore } from 'react-icons/ai';
 import { formatFieldLabel, formatFieldValue, formatTimeAgo } from '../util/schema';
 import ProfileAvatar from './Avatar';
-import SpeedbumpModal from './SpeedbumpModal';
-import EditModal from './EditModal';
-import { deleteFleetPost } from '../redux/actions/fleet';
+import SpeedbumpModal from './modals/SpeedbumpModal';
+import EditModal from './modals/EditModal';
+import { deleteFleetPost, updateFleetPost } from '../redux/actions/fleet';
 
 const FleetPost = ({
-    vehicle, isAuthProfile, showUserDetails, deleteFleetPost,
+    vehicle, isAuthProfile, showUserDetails, deleteFleetPost, user, updateFleetPost,
 }) => {
     const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,28 +61,35 @@ const FleetPost = ({
 
     // TODO: create expandable prop
 
-    const toggleFeatured = async (featured) => {
-        // TODO
+    const toggleFeatured = (featured, id) => {
+        const formData = new FormData();
+        formData.append('featured', !featured);
+        const method = 'patch';
+
+        updateFleetPost(formData, id, user.id, method);
     };
 
     const renderFeaturedButton = (vehicle) => {
         if (vehicle.featured) {
-            const handleOnClick = isAuthProfile ? toggleFeatured(vehicle.featured) : null;
+            if (isAuthProfile) {
+                return (
+                    <Button variant="ghost" onClick={() => toggleFeatured(vehicle.featured, vehicle.id)}>
+                        <StarIcon color="brand.400" />
+                    </Button>
+                );
+            }
+
             return (
-                <Button variant="ghost" onClick={() => handleOnClick}>
-                    <StarIcon color="brand.400" textShadow="0 0 1rem red" />
-                </Button>
+                <StarIcon color="brand.400" m="0.5rem" />
             );
         }
         if (isAuthProfile) {
             return (
-                <Button variant="ghost" onClick={() => toggleFeatured(vehicle.featured)}>
+                <Button variant="ghost" onClick={() => toggleFeatured(vehicle.featured, vehicle.id)}>
                     <StarIcon />
                 </Button>
             );
         }
-
-        return null;
     };
 
     const confirmAction = () => {
@@ -185,6 +192,10 @@ const FleetPost = ({
     );
 };
 
+const mapStateToProps = (state) => ({
+    user: state.auth.user,
+});
+
 FleetPost.defaultProps = {
     isAuthProfile: false,
     showUserDetails: false,
@@ -194,7 +205,9 @@ FleetPost.propTypes = {
     deleteFleetPost: PropTypes.func.isRequired,
     isAuthProfile: PropTypes.bool,
     showUserDetails: PropTypes.bool,
+    updateFleetPost: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
     vehicle: PropTypes.object.isRequired,
 };
 
-export default connect(null, { deleteFleetPost })(FleetPost);
+export default connect(mapStateToProps, { deleteFleetPost, updateFleetPost })(FleetPost);
