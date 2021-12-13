@@ -22,7 +22,6 @@ class FleetPostSerializer(serializers.ModelSerializer):
         return fleetpost
 
     def update(self, instance, validated_data):
-        print('validated_data', validated_data)
         if 'info' in validated_data:
             nested_serializer = self.fields['info']
             nested_instance = instance.info

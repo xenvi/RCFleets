@@ -117,7 +117,7 @@ const FleetPost = ({
                         <Flex alignItems="center" justifyContent="space-between" width="100%" p="1rem">
                             <Flex alignItems="center">
                                 <Link as={RouterLink} to={`/user/${postProfile.handle}`}>
-                                    <ProfileAvatar profile={postProfile} size="sm" />
+                                    <ProfileAvatar src={postProfile?.profile?.avatar} size="sm" />
                                 </Link>
                                 <Link as={RouterLink} to={`/user/${postProfile.handle}`}>
                                     <Heading as="h6" size="md">

@@ -16,10 +16,11 @@ import {
     LOGOUT,
     SET_PROFILE_SUCCESS,
     SET_PROFILE_FAIL,
-    SET_AUTH_PROFILE_SUCCESS,
-    SET_AUTH_PROFILE_FAIL,
     UNSET_PROFILE,
+    UPDATE_PROFILE_SUCCESS,
+    UPDATE_PROFILE_FAIL,
     LOADING_AUTH,
+    RESET_STATUS,
 } from '../types';
 
 const initialState = {
@@ -31,6 +32,7 @@ const initialState = {
     error: null,
     loading: false,
     profile: {},
+    statusSuccess: false,
 };
 
 export default (state = initialState, action) => {
@@ -118,10 +120,26 @@ export default (state = initialState, action) => {
             profile: {},
             loading: false,
         };
+    case UPDATE_PROFILE_SUCCESS:
+        return {
+            ...state,
+            statusSuccess: true,
+        };
+    case UPDATE_PROFILE_FAIL:
+        return {
+            ...state,
+            loading: false,
+            error,
+        };
     case LOADING_AUTH:
         return {
             ...state,
             loading: true,
+        };
+    case RESET_STATUS:
+        return {
+            ...state,
+            statusSuccess: false,
         };
     default:
         return state;

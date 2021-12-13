@@ -17,12 +17,14 @@ import {
     TabList,
     TabPanels,
     TabPanel,
+    useDisclosure,
 } from '@chakra-ui/react';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import { AiOutlineTable } from 'react-icons/ai';
 
 import ProfileAvatar from '../components/Avatar';
 import FleetPost from '../components/FleetPost';
+import EditProfileModal from '../components/modals/EditProfileModal';
 import FleetPostSkeleton from '../components/FleetPostSkeleton';
 import { setProfile, unsetProfile } from '../redux/actions/auth';
 import { setFleet } from '../redux/actions/fleet';
@@ -30,26 +32,28 @@ import { setFleet } from '../redux/actions/fleet';
 const Profile = ({
     match, user, loading, profile, setProfile, unsetProfile, currentFleet, setFleet,
 }) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [isAuthProfile, setIsAuthProfile] = useState(false);
     const [error, setError] = useState([]);
+    const { handle } = match.params;
 
     useEffect(() => {
-        const { handle } = match.params;
+        console.log('hit handle useeffect', handle);
         setProfile(handle);
 
         return () => {
             unsetProfile();
         };
-    }, []);
+    }, [handle]);
 
     useEffect(() => {
-        const { handle } = match.params;
         if (handle === user?.handle) {
             setIsAuthProfile(true);
         }
-    }, [user]);
+    }, [user, handle]);
 
     useEffect(() => {
+        console.log('hit profile useeffect', profile);
         if (Object.keys(profile).length !== 0) {
             setFleet(profile.id);
         }
@@ -69,37 +73,36 @@ const Profile = ({
         const formattedDate = new Date(profile.created_at).toLocaleDateString('en-US');
         const columnSize = useBreakpointValue({ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' });
 
-        const handleEditProfile = () => {
-            // TODO
-        };
-
         return (
-            <Grid rowGap={1} columnGap={2} templateColumns={columnSize} margin="1.5rem 0 0.5rem">
-                <GridItem colSpan={1} display="flex" justifyContent={['flex-start', 'center']} alignItems="center">
-                    <ProfileAvatar user={user} profile={profile} size="lg" />
-                </GridItem>
-                <GridItem colSpan={2}>
-                    <Stack mt={['0.5rem', '0']}>
-                        <Flex alignItems="center">
-                            <Heading as="h2">
-                                {profile.handle}
-                            </Heading>
-                            { isAuthProfile
-                                && (
-                                <Button onClick={() => handleEditProfile()} colorScheme="slateGray" ml="1.5rem" size="sm" variant="outline">
-                                    Edit Profile
-                                </Button>
-                            )}
-                        </Flex>
-                        <Text>
-                            {profile.profile?.bio}
-                        </Text>
-                        <Text as="em" fontSize="xs">
-                            {`Joined ${formattedDate}`.toUpperCase()}
-                        </Text>
-                    </Stack>
-                </GridItem>
-            </Grid>
+            <>
+                <EditProfileModal profileData={profile} isOpen={isOpen} onClose={onClose} />
+                <Grid rowGap={1} columnGap={2} templateColumns={columnSize} margin="1.5rem 0 0.5rem">
+                    <GridItem colSpan={1} display="flex" justifyContent={['flex-start', 'center']} alignItems="center">
+                        <ProfileAvatar name={profile.handle} src={profile?.profile?.avatar} size="lg" />
+                    </GridItem>
+                    <GridItem colSpan={2}>
+                        <Stack mt={['0.5rem', '0']}>
+                            <Flex alignItems="center">
+                                <Heading as="h2">
+                                    {profile.handle}
+                                </Heading>
+                                { isAuthProfile
+                                    && (
+                                    <Button onClick={() => onOpen()} colorScheme="slateGray" ml="1.5rem" size="sm" variant="outline">
+                                        Edit Profile
+                                    </Button>
+                                )}
+                            </Flex>
+                            <Text whiteSpace="pre-wrap">
+                                {profile.profile?.bio}
+                            </Text>
+                            <Text as="em" fontSize="xs">
+                                {`Joined ${formattedDate}`.toUpperCase()}
+                            </Text>
+                        </Stack>
+                    </GridItem>
+                </Grid>
+            </>
         );
     };
 

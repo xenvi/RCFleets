@@ -77,7 +77,7 @@ const Navbar = ({
             </Box>
             <Box display={['block', 'none']} m={['0.75rem auto !important', '0 0.25rem !important']}>
                 <Button variant="ghost" onClick={() => handleProfileClick()}>
-                    <ProfileAvatar user={user} profile={user?.profile} size="sm" marginRight={['0']} />
+                    <ProfileAvatar name={user?.handle} src={user?.profile?.profile?.avatar} size="sm" marginRight={['0']} />
                 </Button>
             </Box>
             <Box display={['none', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
@@ -87,7 +87,7 @@ const Navbar = ({
                 >
                     <PopoverTrigger>
                         <Button variant="ghost">
-                            <ProfileAvatar user={user} profile={user?.profile} size="xs" marginRight={['0']} />
+                            <ProfileAvatar name={user?.handle} src={user?.profile?.profile?.avatar} size="xs" marginRight={['0']} />
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent>

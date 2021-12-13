@@ -139,10 +139,22 @@ const formatFieldValue = (label, value) => {
 
 const formatTimeAgo = (datetime) => timeAgo.format(new Date(datetime)).toUpperCase();
 
+const profileFields = [
+    {
+        label: 'handle',
+        type: 'text',
+    },
+    {
+        label: 'bio',
+        type: 'textarea',
+    },
+];
+
 export {
     fleetPostFields,
     formatFieldLabel,
     formatFieldLabelUnit,
     formatFieldValue,
     formatTimeAgo,
+    profileFields,
 };

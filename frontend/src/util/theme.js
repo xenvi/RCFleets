@@ -114,6 +114,11 @@ const theme = extendTheme({
                 focusBorderColor: 'brand.500',
             },
         },
+        Textarea: {
+            defaultProps: {
+                focusBorderColor: 'brand.500',
+            },
+        },
         Link: {
             variants: {
                 brand: (props) => ({

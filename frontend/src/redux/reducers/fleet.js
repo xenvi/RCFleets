@@ -75,7 +75,6 @@ export default (state = initialState, action) => {
     case UPDATE_FLEET_POST_SUCCESS:
         return {
             ...state,
-            currentFleet: payload,
             statusSuccess: true,
         };
     case UPDATE_FLEET_POST_FAIL:

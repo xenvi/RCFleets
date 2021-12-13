@@ -20,11 +20,13 @@ import {
     CLEAR_ERRORS,
     SET_PROFILE_SUCCESS,
     SET_PROFILE_FAIL,
-    SET_AUTH_PROFILE_SUCCESS,
-    SET_AUTH_PROFILE_FAIL,
+    UPDATE_PROFILE_SUCCESS,
+    UPDATE_PROFILE_FAIL,
     UNSET_PROFILE,
     LOADING_AUTH,
+    RESET_STATUS,
 } from '../types';
+import getCookie from '../../util/getCookie';
 
 export const showAlert = (message) => async (dispatch) => {
     dispatch({
@@ -46,6 +48,8 @@ export const clearAlerts = () => async (dispatch) => {
 
 export const setProfile = (handle) => async (dispatch) => {
     dispatch({ type: LOADING_AUTH });
+
+    console.log('hit setprofile', handle);
 
     const config = {
         headers: {
@@ -164,7 +168,7 @@ export const login = (email, password, history) => async (dispatch) => {
     } catch (err) {
         dispatch({
             type: LOGIN_FAIL,
-            error: err,
+            error: err.response.data,
         });
     }
 };
@@ -294,4 +298,44 @@ export const resetPasswordConfirm = (uid, token, newPassword, reNewPassword, his
             error: err.response.data,
         });
     }
+};
+
+export const updateProfile = (profileData, userId, userHandle) => async (dispatch) => {
+    dispatch({ type: LOADING_AUTH });
+
+    console.log('hit updateprofile uath');
+
+    const csrftoken = getCookie('csrftoken');
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-CSRFToken': csrftoken,
+        },
+    };
+
+    const body = profileData;
+
+    try {
+        await axios.patch(`${process.env.REACT_APP_API_URL}/api/users/update/${userId}`, body, config);
+
+        dispatch({
+            type: UPDATE_PROFILE_SUCCESS,
+        });
+
+        console.log('succes auth');
+
+        dispatch(setProfile(userHandle));
+    } catch (err) {
+        console.log('fail auth', err);
+        dispatch({
+            type: UPDATE_PROFILE_FAIL,
+            error: err,
+        });
+    }
+};
+
+export const resetStatus = () => (dispatch) => {
+    dispatch({
+        type: RESET_STATUS,
+    });
 };

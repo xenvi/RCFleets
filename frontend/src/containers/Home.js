@@ -50,7 +50,7 @@ const Home = ({
                         { user ? (
                             <Flex alignItems="center">
                                 <Link as={RouterLink} to={`/user/${user.handle}`}>
-                                    <ProfileAvatar user={user} profile={user.profile} size="sm" />
+                                    <ProfileAvatar name={user.handle} profile={user.profile?.profile?.avatar} size="sm" />
                                 </Link>
                                 <Link as={RouterLink} to={`/user/${user.handle}`}>
                                     <Heading as="h6" size="md">

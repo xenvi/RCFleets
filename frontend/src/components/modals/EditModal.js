@@ -248,7 +248,7 @@ const EditModal = ({
                     <ModalCloseButton />
                     <ModalBody>
                         <Flex alignItems="center" mb="1rem">
-                            <ProfileAvatar user={user} profile={profile} size="sm" />
+                            <ProfileAvatar name={user?.handle} profile={profile?.profile?.avatar} size="sm" />
                             {user?.handle}
                         </Flex>
                         <form onSubmit={handleSubmit}>
@@ -270,7 +270,7 @@ const EditModal = ({
                                 );
                             })}
                             <ModalFooter>
-                                <Button disabled={loading} type="submit" size="sm" variant="brand">Save Changes</Button>
+                                <Button disabled={loading} type="submit" size="md" variant="brand">Save Changes</Button>
                             </ModalFooter>
                         </form>
                     </ModalBody>

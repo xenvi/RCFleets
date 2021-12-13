@@ -8,7 +8,7 @@ import { useBreakpointValue } from '@chakra-ui/media-query';
 import { AiOutlineUser } from 'react-icons/ai';
 
 const ProfileAvatar = ({
-    profile, user, size, marginRight,
+    size, marginRight, name, src, onClick,
 }) => {
     const { colorMode } = useColorMode();
     let avatarSize = useBreakpointValue({ base: 'lg', sm: 'xl', md: '2xl' });
@@ -33,26 +33,26 @@ const ProfileAvatar = ({
         break;
     }
 
-    if (profile?.profile?.avatar) {
+    if (src) {
         return (
-            <Avatar size={avatarSize} name={user?.handle || 'User Avatar'} src={profile.profile.avatar} mr={marginRight} />
+            <Avatar size={avatarSize} name={name || 'User Avatar'} src={src} mr={marginRight} onClick={onClick} cursor={onClick && 'pointer'} />
         );
     }
     return (
-        <Avatar size={avatarSize} bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize={avatarIconFontSize} />} mr={marginRight} />
+        <Avatar size={avatarSize} bg="brand.500" color={colorMode === 'light' ? 'light' : 'dark.800'} icon={<AiOutlineUser fontSize={avatarIconFontSize} />} mr={marginRight} onClick={onClick} cursor={onClick && 'pointer'} />
     );
 };
 
 ProfileAvatar.defaultProps = {
-    user: null,
+    name: null,
     marginRight: ['0.5rem', '1rem'],
 };
 
 ProfileAvatar.propTypes = {
     marginRight: PropTypes.array,
-    profile: PropTypes.object.isRequired,
+    name: PropTypes.string,
     size: PropTypes.string.isRequired,
-    user: PropTypes.object,
+    src: PropTypes.string.isRequired,
 };
 
 export default ProfileAvatar;
