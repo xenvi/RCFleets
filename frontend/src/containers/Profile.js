@@ -38,7 +38,6 @@ const Profile = ({
     const { handle } = match.params;
 
     useEffect(() => {
-        console.log('hit handle useeffect', handle);
         setProfile(handle);
 
         return () => {
@@ -53,7 +52,6 @@ const Profile = ({
     }, [user, handle]);
 
     useEffect(() => {
-        console.log('hit profile useeffect', profile);
         if (Object.keys(profile).length !== 0) {
             setFleet(profile.id);
         }

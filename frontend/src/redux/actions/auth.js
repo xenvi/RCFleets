@@ -49,8 +49,6 @@ export const clearAlerts = () => async (dispatch) => {
 export const setProfile = (handle) => async (dispatch) => {
     dispatch({ type: LOADING_AUTH });
 
-    console.log('hit setprofile', handle);
-
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -303,8 +301,6 @@ export const resetPasswordConfirm = (uid, token, newPassword, reNewPassword, his
 export const updateProfile = (profileData, userId, userHandle) => async (dispatch) => {
     dispatch({ type: LOADING_AUTH });
 
-    console.log('hit updateprofile uath');
-
     const csrftoken = getCookie('csrftoken');
     const config = {
         headers: {
@@ -322,11 +318,8 @@ export const updateProfile = (profileData, userId, userHandle) => async (dispatc
             type: UPDATE_PROFILE_SUCCESS,
         });
 
-        console.log('succes auth');
-
         dispatch(setProfile(userHandle));
     } catch (err) {
-        console.log('fail auth', err);
         dispatch({
             type: UPDATE_PROFILE_FAIL,
             error: err,

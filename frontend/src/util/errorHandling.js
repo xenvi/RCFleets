@@ -17,11 +17,9 @@ export const formatFormErrors = (errorType, errorMsg) => (
     [[errorType, [errorMsg]]]
 );
 
-export const renderFormErrors = (formErrors) => {
-    console.log('formErrors', formErrors);
-    return (
-        <Stack spacing={1}>
-            {formErrors.map((errorType) => {
+export const renderFormErrors = (formErrors) => (
+    <Stack spacing={1}>
+        {formErrors.map((errorType) => {
                 if (Array.isArray(errorType[1])) {
                    return errorType[1].map((error) => (
                        <Text variant="error">
@@ -41,6 +39,5 @@ export const renderFormErrors = (formErrors) => {
                     </Text>
                 );
             })}
-        </Stack>
-    );
-};
+    </Stack>
+);
