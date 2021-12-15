@@ -25,7 +25,7 @@ Folder structure:
 # Short Term TODO
 - ~~Add Home page (recent card posts)~~
 - ~~Add Profile page~~
-- Add CRUD abilities for RC Car info card
+- ~~Add CRUD abilities for RC Car info card~~
 - Expand footer with links/social
 - ~~Ensure Responsive~~
 - ~~Improve field errors on forms~~
@@ -39,8 +39,8 @@ Folder structure:
 
 # Long Term TODO
 - "Remember Me" functionality - extend access/refresh token use to keep user logged in
-- Shop based (user selling portal for RC related items with chat) features
-- Forum/follow based features
+- Shop based (user selling portal for RC related items with chat) features ?
+- Forum/follow/comment based features
 - Notifications
 - Google Analytics
 - React Helmet (resolve google crawl indexing issues with React)

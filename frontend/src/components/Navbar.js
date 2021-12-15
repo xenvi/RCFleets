@@ -41,6 +41,7 @@ const Navbar = ({
 }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: popoverIsOpen, onOpen: popoverOnOpen, onClose: popoverOnClose } = useDisclosure();
     const history = useHistory();
 
     const handleLogout = () => {
@@ -87,6 +88,9 @@ const Navbar = ({
                 <Popover
                   placement="bottom-end"
                   colorScheme="dark"
+                  isOpen={popoverIsOpen}
+                  onOpen={popoverOnOpen}
+                  onClose={popoverOnClose}
                 >
                     <PopoverTrigger>
                         <Button variant="ghost">
@@ -103,7 +107,7 @@ const Navbar = ({
                             </Text>
                         </PopoverHeader>
                         <PopoverBody p="0">
-                            <Button onClick={() => handleProfileClick()} variant="fullLeftAlign">
+                            <Button onClick={() => { handleProfileClick(); popoverOnClose(); }} variant="fullLeftAlign">
                                 <Box mr="1rem">
                                     <AiOutlineUser fontSize="1rem" />
                                 </Box>
@@ -115,7 +119,7 @@ const Navbar = ({
                             </Button>
                         </PopoverBody>
                         <PopoverFooter p="0">
-                            <Button onClick={() => handleLogout()} variant="fullLeftAlign">
+                            <Button onClick={() => { handleLogout(); popoverOnClose(); }} variant="fullLeftAlign">
                                 Log Out
                             </Button>
                         </PopoverFooter>
