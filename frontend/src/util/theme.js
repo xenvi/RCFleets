@@ -138,6 +138,13 @@ const theme = extendTheme({
                     fontStyle: 'italic',
                     color: 'brand.300',
                 },
+                fullLeftAlign: {
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    padding: '1rem',
+                    fontSize: '0.9rem',
+                    borderRadius: 'none',
+                },
             },
         },
         Container: {

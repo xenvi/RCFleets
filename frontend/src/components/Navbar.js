@@ -2,11 +2,13 @@ import React from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
+    chakra,
     Container,
     Flex,
     Spacer,
     Box,
     Button,
+    Text,
     Heading,
     Link,
     Drawer,
@@ -20,6 +22,7 @@ import {
     PopoverContent,
     PopoverBody,
     PopoverFooter,
+    PopoverHeader,
     PopoverArrow,
     useColorMode,
     useDisclosure,
@@ -92,6 +95,13 @@ const Navbar = ({
                     </PopoverTrigger>
                     <PopoverContent>
                         <PopoverArrow />
+                        <PopoverHeader p="0" display="flex">
+                            <Text variant="fullLeftAlign">
+                                Signed in as
+                                {' '}
+                                <chakra.span fontWeight="bold">{user?.handle}</chakra.span>
+                            </Text>
+                        </PopoverHeader>
                         <PopoverBody p="0">
                             <Button onClick={() => handleProfileClick()} variant="fullLeftAlign">
                                 <Box mr="1rem">

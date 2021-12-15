@@ -37,33 +37,15 @@ const Home = ({
 
     return (
         <Container maxW="container.lg" p="1.5rem">
-            <Grid columnGap={10} templateColumns={['repeat(2, 1fr)', 'repeat(8, 1fr)']}>
-                <GridItem colSpan={5}>
+            <Flex justifyContent="center">
+                <Box maxWidth="60%">
                     { fleetsData?.map((vehicle) => (
                         <Box mb="2rem">
                             <FleetPost vehicle={vehicle} showUserDetails />
                         </Box>
                     ))}
-                </GridItem>
-                <GridItem colSpan={3}>
-                    <Box position="sticky" top="100px">
-                        { user ? (
-                            <Flex alignItems="center">
-                                <Link as={RouterLink} to={`/user/${user.handle}`}>
-                                    <ProfileAvatar name={user.handle} profile={user.profile?.profile?.avatar} size="sm" />
-                                </Link>
-                                <Link as={RouterLink} to={`/user/${user.handle}`}>
-                                    <Heading as="h6" size="md">
-                                        {user.handle}
-                                    </Heading>
-                                </Link>
-                            </Flex>
-                        ) : (
-                            <Text fontSize="md" fontWeight="bold">Sign in to build your fleet!</Text>
-                        )}
-                    </Box>
-                </GridItem>
-            </Grid>
+                </Box>
+            </Flex>
         </Container>
     );
 };

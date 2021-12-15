@@ -318,6 +318,7 @@ export const updateProfile = (profileData, userId, userHandle) => async (dispatc
             type: UPDATE_PROFILE_SUCCESS,
         });
 
+        dispatch(loadUser());
         dispatch(setProfile(userHandle));
     } catch (err) {
         dispatch({
