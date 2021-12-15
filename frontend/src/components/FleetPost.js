@@ -20,6 +20,11 @@ import {
     PopoverBody,
     PopoverFooter,
     PopoverArrow,
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionIcon,
+    AccordionPanel,
     useDisclosure,
     useColorMode,
 } from '@chakra-ui/react';
@@ -96,6 +101,29 @@ const FleetPost = ({
         deleteFleetPost(vehicle.id, vehicle.user);
     };
 
+    const mapData = (data) => (
+        <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} p="1rem">
+            { data.map((field) => {
+                    const label = formatFieldLabel(field[0]);
+                    const value = formatFieldValue(field[0], field[1]);
+                    return (
+                        <>
+                            <GridItem colSpan={2} justifySelf="start">
+                                <Text fontWeight="bold" fontSize="0.9rem">
+                                    {label}
+                                </Text>
+                            </GridItem>
+                            <GridItem colSpan={2} justifySelf="start">
+                                <Text fontSize="0.9rem">
+                                    {value}
+                                </Text>
+                            </GridItem>
+                        </>
+                    );
+                })}
+        </Grid>
+    );
+
     return (
         <SlideFade in offsetY="4rem">
             <SpeedbumpModal
@@ -111,6 +139,7 @@ const FleetPost = ({
               borderRadius="md"
               bg={colorMode === 'light' ? 'slateGray.50' : 'slateGray.700'}
               variant={vehicle.featured ? 'featuredCard' : 'card'}
+              overflow="hidden"
             >
                 { showUserDetails && (
                     <>
@@ -167,26 +196,18 @@ const FleetPost = ({
                 </Flex>
                 { vehicle.thumbnail && <Image src={vehicle.thumbnail} alt={vehicle.title} /> }
 
-                <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} p="1rem">
-                    { vehicle.info && Object.entries(vehicle.info).map((field) => {
-                        const label = formatFieldLabel(field[0]);
-                        const value = formatFieldValue(field[0], field[1]);
-                        return (
-                            <>
-                                <GridItem colSpan={2} justifySelf="start">
-                                    <Text fontWeight="bold" fontSize="0.9rem">
-                                        {label}
-                                    </Text>
-                                </GridItem>
-                                <GridItem colSpan={2} justifySelf="start">
-                                    <Text fontSize="0.9rem">
-                                        {value}
-                                    </Text>
-                                </GridItem>
-                            </>
-                        );
-                    })}
-                </Grid>
+                { mapData(vehicle.info && Object.entries(vehicle.info).slice(0, 2)) }
+
+                <Accordion allowToggle>
+                    <AccordionItem>
+                        <AccordionButton justifyContent="center">
+                            <AccordionIcon />
+                        </AccordionButton>
+                        <AccordionPanel p="0">
+                            { mapData(vehicle.info && Object.entries(vehicle.info).slice(2)) }
+                        </AccordionPanel>
+                    </AccordionItem>
+                </Accordion>
             </Flex>
         </SlideFade>
     );

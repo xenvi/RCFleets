@@ -102,6 +102,16 @@ const theme = extendTheme({
                         backgroundColor: mode('slateGray.50', 'slateGray.600')(props),
                     },
                 }),
+                fullCenterAlign: (props) => ({
+                    width: '100%',
+                    justifyContent: 'center',
+                    padding: '1rem',
+                    fontSize: '0.9rem',
+                    borderRadius: 'none',
+                    _hover: {
+                        backgroundColor: mode('slateGray.50', 'slateGray.600')(props),
+                    },
+                }),
             },
         },
         Input: {
