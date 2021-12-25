@@ -54,6 +54,11 @@ const Navbar = ({
         return isOpen && onClose();
     };
 
+    const handleSettingsClick = () => {
+        history.push('/settings');
+        return isOpen && onClose();
+    };
+
     const guestLinks = () => (
         <>
             <Box display={['block', 'inline-block']} m="auto">
@@ -113,7 +118,7 @@ const Navbar = ({
                                 </Box>
                                 Profile
                             </Button>
-                            <Button variant="fullLeftAlign">
+                            <Button onClick={() => { handleSettingsClick(); popoverOnClose(); }} variant="fullLeftAlign">
                                 <SettingsIcon mr="1rem" />
                                 Settings
                             </Button>

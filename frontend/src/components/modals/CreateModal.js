@@ -23,7 +23,6 @@ import {
     Input,
     Image,
     Flex,
-    Progress,
     Box,
     useDisclosure,
 } from '@chakra-ui/react';
@@ -237,7 +236,6 @@ const CreateModal = ({
             <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
                 <ModalOverlay />
                 <ModalContent>
-                    { loading && <Progress size="xs" isIndeterminate colorScheme="brand" /> }
                     <ModalHeader>Create Fleet Post</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
@@ -264,7 +262,7 @@ const CreateModal = ({
                                 );
                             })}
                             <ModalFooter>
-                                <Button disabled={loading} type="submit" size="md" variant="brand">Share</Button>
+                                <Button isLoading={loading} type="submit" size="md" variant="brand">Share</Button>
                             </ModalFooter>
                         </form>
                     </ModalBody>
@@ -283,9 +281,10 @@ const mapStateToProps = (state) => ({
 
 CreateModal.propTypes = {
     createFleetPost: PropTypes.func.isRequired,
-    statusSuccess: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     profile: PropTypes.object.isRequired,
+    resetStatus: PropTypes.func.isRequired,
+    statusSuccess: PropTypes.bool.isRequired,
     user: PropTypes.object.isRequired,
 };
 

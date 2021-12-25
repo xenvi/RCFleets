@@ -200,6 +200,43 @@ const theme = extendTheme({
                 },
             },
         },
+        Tabs: {
+            variants: {
+                variantLine: (props) => ({
+                    root: {
+                        border: '1px',
+                        borderColor: mode('blackAlpha.300', 'whiteAlpha.300')(props),
+                        boxShadow: '0 0 0.25rem slateGray.100',
+                    },
+                    tab: {
+                        opacity: 0.7,
+                        borderStart: '2px solid',
+                        borderColor: 'transparent',
+                        _selected: {
+                            borderStart: '2px solid',
+                            borderColor: 'brand.500',
+                            opacity: 1,
+                        },
+                        _hover: {
+                            bg: mode('slateGray.50', 'whiteAlpha.100')(props),
+                            borderStart: '2px solid',
+                            borderColor: 'brand.500',
+                        },
+                        _active: {
+                            bg: mode('slateGray.50', 'whiteAlpha.100')(props),
+                        },
+                        _disabled: {
+                            opacity: 0.4,
+                            cursor: 'not-allowed',
+                        },
+                    },
+                    tablist: {
+                        borderEnd: '1px',
+                        borderColor: mode('blackAlpha.300', 'whiteAlpha.300')(props),
+                    },
+                }),
+            },
+        },
     },
 });
 

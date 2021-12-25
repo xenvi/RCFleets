@@ -5,35 +5,29 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
     Button,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
     Stack,
     Heading,
     Text,
     Textarea,
     Input,
     Flex,
-    Progress,
-    useDisclosure,
+    useColorMode,
+    useToast,
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import {
     profileFields, formatFieldLabel,
-} from '../../util/schema';
-import CSRFToken from '../../util/csrfToken';
-import { updateProfile, resetStatus } from '../../redux/actions/auth';
-import ProfileAvatar from '../Avatar';
-import SpeedbumpModal from './SpeedbumpModal';
+} from '../util/schema';
+import CSRFToken from '../util/csrfToken';
+import { updateProfile, resetStatus } from '../redux/actions/auth';
+import ProfileAvatar from './Avatar';
+import Toast from './Toast';
 
-const EditProfileModal = ({
-    user, updateProfile, loading, statusSuccess, resetStatus, profileData, onClose, isOpen,
+const EditProfile = ({
+    updateProfile, loading, error, statusSuccess, resetStatus, profileData,
 }) => {
-    const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
+    const toast = useToast();
+    const { colorMode } = useColorMode();
     const [values, setValues] = useState({});
     const [avatarFile, setAvatarFile] = useState([]);
 
@@ -62,10 +56,27 @@ const EditProfileModal = ({
 
     useEffect(() => {
         if (statusSuccess) {
-            onClose();
+            const color = colorMode === 'light' ? 'light' : 'dark.800';
+            const bgColor = colorMode === 'light' ? 'dark.800' : 'light';
+            toast({
+                position: 'bottom-left',
+                render: () => (<Toast color={color} bgColor={bgColor} text="Profile saved." />),
+                duration: 4000,
+            });
             resetStatus();
         }
     }, [statusSuccess]);
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                position: 'bottom-left',
+                render: () => (<Toast color="light" bgColor="brand.500" text="Oops! Something went wrong." />),
+                duration: 5000,
+            });
+            resetStatus();
+        }
+    }, [error]);
 
     // revokes data uri to avoid memory leak
     useEffect(() => () => {
@@ -142,51 +153,32 @@ const EditProfileModal = ({
 
     return (
         <>
-            <SpeedbumpModal
-              confirmAction={onClose}
-              headerText="Are you sure you want to exit?"
-              subText="Changes will not be saved."
-              isOpen={isOpenSpeedbump}
-              onClose={onCloseSpeedbump}
-            />
+            <form onSubmit={handleSubmit}>
+                <CSRFToken />
+                <Flex direction="column" justifyContent="center" alignItems="center" mb="1rem">
+                    <Input {...getInputProps()} />
+                    <ProfileAvatar name={profileData.handle} src={acceptedFiles.length > 0 ? acceptedFiles[0].preview : profileData.profile?.avatar} size="lg" marginRight={[0]} onClick={open} />
+                    <Heading as="h4" size="md" color="brand" mt="0.5rem" cursor="pointer" onClick={open}>Change Avatar</Heading>
+                </Flex>
+                {profileFields.map((field) => {
+                    const label = formatFieldLabel(field.label);
+                    return (
+                        <Stack pt="1rem">
+                            <Text fontWeight="bold" fontSize="0.9rem">
+                                {label}
+                            </Text>
+                            { values.profile && renderDynamicInput(field) }
+                            { field.label === 'bio' && (
+                                <Text as="em" fontSize="0.9rem" mt="0.25rem !important">
+                                    Max characters: 150
+                                </Text>
+                            )}
+                        </Stack>
+                    );
+                })}
 
-            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
-                <ModalOverlay />
-                <ModalContent>
-                    { loading && <Progress size="xs" isIndeterminate colorScheme="brand" /> }
-                    <ModalHeader>Edit Profile</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <form onSubmit={handleSubmit}>
-                            <CSRFToken />
-                            <Flex direction="column" justifyContent="center" alignItems="center" mb="1rem">
-                                <Input {...getInputProps()} />
-                                <ProfileAvatar name={profileData.handle} src={acceptedFiles.length > 0 ? acceptedFiles[0].preview : profileData.profile?.avatar} size="lg" marginRight={[0]} onClick={open} />
-                                <Heading as="h4" size="md" color="brand" mt="0.5rem" cursor="pointer" onClick={open}>Change Avatar</Heading>
-                            </Flex>
-                            {profileFields.map((field) => {
-                                const label = formatFieldLabel(field.label);
-                                return (
-                                    <Stack pt="1rem">
-                                        <Text fontWeight="bold" fontSize="0.9rem">
-                                            {label}
-                                        </Text>
-                                        { values.profile && renderDynamicInput(field) }
-                                        { field.label === 'bio' && (
-                                            <Text as="em" fontSize="0.9rem" mt="0.25rem !important">
-                                                Max characters: 150
-                                            </Text>
-                                        )}
-                                    </Stack>
-                                );
-                            })}
-                            <ModalFooter justifyContent="center" mt="0.5rem">
-                                <Button disabled={loading} type="submit" size="md" variant="brand">Save Changes</Button>
-                            </ModalFooter>
-                        </form>
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
+                <Button isLoading={loading} type="submit" size="md" variant="brand" mt="1rem">Save Changes</Button>
+            </form>
         </>
     );
 };
@@ -194,15 +186,18 @@ const EditProfileModal = ({
 const mapStateToProps = (state) => ({
     statusSuccess: state.auth.statusSuccess,
     loading: state.auth.loading,
+    error: state.auth.error,
     user: state.auth.user,
 });
 
-EditProfileModal.propTypes = {
+EditProfile.propTypes = {
+    error: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
     profileData: PropTypes.object.isRequired,
+    resetStatus: PropTypes.func.isRequired,
     statusSuccess: PropTypes.bool.isRequired,
     updateProfile: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { updateProfile, resetStatus })(EditProfileModal);
+export default connect(mapStateToProps, { updateProfile, resetStatus })(EditProfile);

@@ -270,7 +270,7 @@ const EditModal = ({
                                 );
                             })}
                             <ModalFooter>
-                                <Button disabled={loading} type="submit" size="md" variant="brand">Save Changes</Button>
+                                <Button isLoading={loading} type="submit" size="md" variant="brand">Save Changes</Button>
                             </ModalFooter>
                         </form>
                     </ModalBody>
@@ -288,10 +288,10 @@ const mapStateToProps = (state) => ({
 });
 
 EditModal.propTypes = {
-    updateFleetPost: PropTypes.func.isRequired,
-    statusSuccess: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     profile: PropTypes.object.isRequired,
+    statusSuccess: PropTypes.bool.isRequired,
+    updateFleetPost: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
     vehicleData: PropTypes.object.isRequired,
 };

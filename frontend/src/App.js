@@ -18,6 +18,7 @@ import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 import ResetPasswordSuccess from './containers/ResetPasswordSuccess';
 import Profile from './containers/Profile';
+import Settings from './containers/Settings';
 
 const GlobalStyles = css`
     /*
@@ -38,6 +39,7 @@ const App = () => (
                 <Layout>
                     <Switch>
                         <Route exact path="/" component={Home} />
+                        <Route exact path="/settings" component={Settings} />
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/signup" component={Signup} />
                         <Route exact path="/signup/success" component={SignupSuccess} />

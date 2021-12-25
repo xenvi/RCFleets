@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
     Flex,
@@ -17,14 +18,12 @@ import {
     TabList,
     TabPanels,
     TabPanel,
-    useDisclosure,
 } from '@chakra-ui/react';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import { AiOutlineTable } from 'react-icons/ai';
 
 import ProfileAvatar from '../components/Avatar';
 import FleetPost from '../components/FleetPost';
-import EditProfileModal from '../components/modals/EditProfileModal';
 import FleetPostSkeleton from '../components/FleetPostSkeleton';
 import { setProfile, unsetProfile } from '../redux/actions/auth';
 import { setFleet } from '../redux/actions/fleet';
@@ -32,7 +31,7 @@ import { setFleet } from '../redux/actions/fleet';
 const Profile = ({
     match, user, loading, profile, setProfile, unsetProfile, currentFleet, setFleet,
 }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const history = useHistory();
     const [isAuthProfile, setIsAuthProfile] = useState(false);
     const [error, setError] = useState([]);
     const { handle } = match.params;
@@ -73,7 +72,6 @@ const Profile = ({
 
         return (
             <>
-                <EditProfileModal profileData={profile} isOpen={isOpen} onClose={onClose} />
                 <Grid rowGap={1} columnGap={2} templateColumns={columnSize} margin="1.5rem 0 0.5rem">
                     <GridItem colSpan={1} display="flex" justifyContent={['flex-start', 'center']} alignItems="center">
                         <ProfileAvatar name={profile.handle} src={profile?.profile?.avatar} size="lg" />
@@ -86,7 +84,7 @@ const Profile = ({
                                 </Heading>
                                 { isAuthProfile
                                     && (
-                                    <Button onClick={() => onOpen()} colorScheme="slateGray" ml="1.5rem" size="sm" variant="outline">
+                                    <Button onClick={() => history.push('/settings')} colorScheme="slateGray" ml="1.5rem" size="sm" variant="outline">
                                         Edit Profile
                                     </Button>
                                 )}

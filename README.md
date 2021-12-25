@@ -35,6 +35,7 @@ Folder structure:
 - ~~Refactor extra user details to UserProfile One-to-one relation~~
 - Add loading UI/states to pages
 - Add image expansion functionality on click (inline image viewer)
+- Add protected pages
 - Refactor!!!
 
 # Long Term TODO
