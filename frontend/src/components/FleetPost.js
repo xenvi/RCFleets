@@ -133,7 +133,7 @@ const FleetPost = ({
               isOpen={isOpenSpeedbump}
               onClose={onCloseSpeedbump}
             />
-            <EditModal vehicleData={vehicle} isOpen={isOpen} onClose={onClose} />
+            { isOpen && <EditModal vehicleData={vehicle} isOpen={isOpen} onClose={onClose} /> }
             <Flex
               direction="column"
               borderRadius="md"

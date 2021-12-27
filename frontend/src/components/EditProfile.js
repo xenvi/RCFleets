@@ -11,7 +11,6 @@ import {
     Textarea,
     Input,
     Flex,
-    useColorMode,
     useToast,
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
@@ -27,7 +26,6 @@ const EditProfile = ({
     updateProfile, loading, error, statusSuccess, resetStatus, profileData,
 }) => {
     const toast = useToast();
-    const { colorMode } = useColorMode();
     const [values, setValues] = useState({});
     const [avatarFile, setAvatarFile] = useState([]);
 
@@ -56,11 +54,9 @@ const EditProfile = ({
 
     useEffect(() => {
         if (statusSuccess) {
-            const color = colorMode === 'light' ? 'light' : 'dark.800';
-            const bgColor = colorMode === 'light' ? 'dark.800' : 'light';
             toast({
                 position: 'bottom-left',
-                render: () => (<Toast color={color} bgColor={bgColor} text="Profile saved." />),
+                render: () => (<Toast color="light" bgColor="green.400" text="Profile saved." />),
                 duration: 4000,
             });
             resetStatus();

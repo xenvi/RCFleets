@@ -26,6 +26,7 @@ import {
     Progress,
     Box,
     useDisclosure,
+    useToast,
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import {
@@ -35,10 +36,12 @@ import CSRFToken from '../../util/csrfToken';
 import { updateFleetPost, resetStatus } from '../../redux/actions/fleet';
 import ProfileAvatar from '../Avatar';
 import SpeedbumpModal from './SpeedbumpModal';
+import Toast from '../Toast';
 
 const EditModal = ({
-    profile, user, updateFleetPost, loading, statusSuccess, resetStatus, vehicleData, onClose, isOpen,
+    profile, user, updateFleetPost, loading, error, statusSuccess, resetStatus, vehicleData, onClose, isOpen,
 }) => {
+    const toast = useToast();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [values, setValues] = useState({});
     const [thumbnailFile, setThumbnailFile] = useState([]);
@@ -77,10 +80,26 @@ const EditModal = ({
 
     useEffect(() => {
         if (statusSuccess) {
+            toast({
+                position: 'bottom-left',
+                render: () => (<Toast color="light" bgColor="green.400" text="Changes have been saved." />),
+                duration: 4000,
+            });
+
             onClose();
             resetStatus();
         }
     }, [statusSuccess]);
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                position: 'bottom-left',
+                render: () => (<Toast color="light" bgColor="brand.500" text="Oops! Something went wrong." />),
+                duration: 5000,
+            });
+        }
+    }, [error]);
 
     // revokes data uri to avoid memory leak
     useEffect(() => () => {
@@ -283,13 +302,18 @@ const EditModal = ({
 const mapStateToProps = (state) => ({
     statusSuccess: state.fleet.statusSuccess,
     loading: state.fleet.loading,
+    error: state.fleet.error,
     profile: state.auth.profile,
     user: state.auth.user,
 });
 
 EditModal.propTypes = {
+    error: PropTypes.string.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
+    resetStatus: PropTypes.func.isRequired,
     statusSuccess: PropTypes.bool.isRequired,
     updateFleetPost: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,

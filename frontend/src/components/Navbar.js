@@ -28,7 +28,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import {
-    MoonIcon, SunIcon, HamburgerIcon, SettingsIcon,
+    MoonIcon, SunIcon, HamburgerIcon, SettingsIcon, PlusSquareIcon,
 } from '@chakra-ui/icons';
 import { AiOutlineUser, AiTwotoneThunderbolt } from 'react-icons/ai';
 import { connect } from 'react-redux';
@@ -41,6 +41,7 @@ const Navbar = ({
 }) => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: createModalIsOpen, onOpen: createModalOnOpen, onClose: createModalOnClose } = useDisclosure();
     const { isOpen: popoverIsOpen, onOpen: popoverOnOpen, onClose: popoverOnClose } = useDisclosure();
     const history = useHistory();
 
@@ -82,7 +83,10 @@ const Navbar = ({
                 </Button>
             </Box>
             <Box display={['block', 'inline-block']} m={['0.75rem auto !important', '0 0.25rem !important']}>
-                <CreateModal />
+                <Button variant="ghost" onClick={createModalOnOpen}>
+                    <PlusSquareIcon boxSize={5} />
+                </Button>
+                { createModalIsOpen && <CreateModal isOpen={createModalIsOpen} onClose={createModalOnClose} /> }
             </Box>
             <Box display={['block', 'none']} m={['0.75rem auto !important', '0 0.25rem !important']}>
                 <Button variant="ghost" onClick={() => handleProfileClick()}>

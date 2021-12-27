@@ -25,10 +25,8 @@ import {
     Flex,
     Box,
     useDisclosure,
+    useToast,
 } from '@chakra-ui/react';
-import {
-    PlusSquareIcon,
-} from '@chakra-ui/icons';
 import { useDropzone } from 'react-dropzone';
 import {
     fleetPostFields, formatFieldLabel, formatFieldLabelUnit,
@@ -37,11 +35,12 @@ import CSRFToken from '../../util/csrfToken';
 import { createFleetPost, resetStatus } from '../../redux/actions/fleet';
 import ProfileAvatar from '../Avatar';
 import SpeedbumpModal from './SpeedbumpModal';
+import Toast from '../Toast';
 
 const CreateModal = ({
-    profile, user, createFleetPost, loading, statusSuccess, resetStatus,
+    profile, user, createFleetPost, loading, error, statusSuccess, resetStatus, onClose, isOpen,
 }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [values, setValues] = useState({});
     const [thumbnailFile, setThumbnailFile] = useState([]);
@@ -91,10 +90,26 @@ const CreateModal = ({
 
     useEffect(() => {
         if (statusSuccess) {
+            toast({
+                position: 'bottom-left',
+                render: () => (<Toast color="light" bgColor="green.400" text="Post created successfully." />),
+                duration: 4000,
+            });
+
             onClose();
             resetStatus();
         }
     }, [statusSuccess]);
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                position: 'bottom-left',
+                render: () => (<Toast color="light" bgColor="brand.500" text="Oops! Something went wrong." />),
+                duration: 5000,
+            });
+        }
+    }, [error]);
 
     // revokes data uri to avoid memory leak
     useEffect(() => () => {
@@ -229,10 +244,6 @@ const CreateModal = ({
               onClose={onCloseSpeedbump}
             />
 
-            <Button variant="ghost" onClick={onOpen}>
-                <PlusSquareIcon boxSize={5} />
-            </Button>
-
             <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
                 <ModalOverlay />
                 <ModalContent>
@@ -246,21 +257,21 @@ const CreateModal = ({
                         <form onSubmit={handleSubmit}>
                             <CSRFToken />
                             {fleetPostFields.map((field) => {
-                                const label = formatFieldLabel(field.label);
-                                const unit = formatFieldLabelUnit(field.label);
-                                return (
-                                    <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} paddingTop="1rem">
-                                        <GridItem colSpan={2} justifySelf="start">
-                                            <Text fontWeight="bold" fontSize="0.9rem">
-                                                {`${label} ${unit}`}
-                                            </Text>
-                                        </GridItem>
-                                        <GridItem colSpan={2} justifySelf="start" width="100%">
-                                            { renderDynamicInput(field) }
-                                        </GridItem>
-                                    </Grid>
-                                );
-                            })}
+                            const label = formatFieldLabel(field.label);
+                            const unit = formatFieldLabelUnit(field.label);
+                            return (
+                                <Grid rowGap={1} columnGap={2} templateColumns={['repeat(2, 1fr)', 'repeat(4, 1fr)']} paddingTop="1rem">
+                                    <GridItem colSpan={2} justifySelf="start">
+                                        <Text fontWeight="bold" fontSize="0.9rem">
+                                            {`${label} ${unit}`}
+                                        </Text>
+                                    </GridItem>
+                                    <GridItem colSpan={2} justifySelf="start" width="100%">
+                                        { renderDynamicInput(field) }
+                                    </GridItem>
+                                </Grid>
+                            );
+                        })}
                             <ModalFooter>
                                 <Button isLoading={loading} type="submit" size="md" variant="brand">Share</Button>
                             </ModalFooter>
@@ -275,13 +286,17 @@ const CreateModal = ({
 const mapStateToProps = (state) => ({
     statusSuccess: state.fleet.statusSuccess,
     loading: state.fleet.loading,
+    error: state.fleet.error,
     profile: state.auth.profile,
     user: state.auth.user,
 });
 
 CreateModal.propTypes = {
     createFleetPost: PropTypes.func.isRequired,
+    error: PropTypes.string.isRequired,
+    isOpen: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     resetStatus: PropTypes.func.isRequired,
     statusSuccess: PropTypes.bool.isRequired,
