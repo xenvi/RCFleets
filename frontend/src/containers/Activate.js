@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -13,12 +13,14 @@ import {
 
 import { verify } from '../redux/actions/auth';
 
-const Activate = ({ match, verify, loading }) => {
+const Activate = ({ match }) => {
+    const loading = useSelector((state) => state.auth.loading);
+    const dispatch = useDispatch();
     const history = useHistory();
 
     const verifyAccount = () => {
         const { uid, token } = match.params;
-        verify(uid, token, history);
+        dispatch(verify(uid, token, history));
     };
 
     return (
@@ -39,14 +41,8 @@ const Activate = ({ match, verify, loading }) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    loading: state.auth.loading,
-});
-
 Activate.propTypes = {
-    loading: PropTypes.bool.isRequired,
     match: PropTypes.object.isRequired,
-    verify: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { verify })(Activate);
+export default Activate;

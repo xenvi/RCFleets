@@ -251,7 +251,7 @@ const CreateModal = ({
                     <ModalCloseButton />
                     <ModalBody>
                         <Flex alignItems="center" mb="1rem">
-                            <ProfileAvatar name={user?.handle} profile={profile?.profile?.avatar} size="sm" />
+                            <ProfileAvatar name={user?.handle} src={profile?.profile?.avatar} size="sm" />
                             {user?.handle}
                         </Flex>
                         <form onSubmit={handleSubmit}>

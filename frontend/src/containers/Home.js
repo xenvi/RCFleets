@@ -1,66 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import React, {
+    useState, useEffect, useLayoutEffect,
+} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Container,
     Box,
-    Grid,
-    GridItem,
     Flex,
-    Heading,
-    Link,
-    Text,
+    Spinner,
 } from '@chakra-ui/react';
 
-import ProfileAvatar from '../components/Avatar';
 import FleetPost from '../components/FleetPost';
 import { setFleets } from '../redux/actions/fleet';
 
-const Home = ({
-    allFleets, setFleets, loading, user,
-}) => {
-    const [fleetsData, setFleetsData] = useState([]);
+const Home = () => {
+    const allFleets = useSelector((state) => state.fleet.allFleets);
+    const allFleetsLoaded = useSelector((state) => state.fleet.allFleetsLoaded);
+    const loading = useSelector((state) => state.fleet.loading);
+
+    const dispatch = useDispatch();
+
+    const [page, setPage] = useState(1);
+
+    console.log('allFleets', allFleets);
 
     useEffect(() => {
-        setFleets();
-    }, []);
+        const loadPosts = async () => {
+            await dispatch(setFleets(page));
+        };
 
-    useEffect(() => {
-        if (Object.keys(allFleets).length !== 0) {
-            setFleetsData(allFleets);
-        }
-    }, [allFleets]);
+        loadPosts();
+    }, [page]);
 
-    // TODO: add loading functionality
-    // TODO: create lazy loading functionality
+    useLayoutEffect(() => {
+        const handleScroll = () => {
+            // on scroll to bottom of page, load more posts until end of list
+            if ((window.innerHeight + window.scrollY) === document.body.offsetHeight) {
+                if (!allFleetsLoaded) setPage((prev) => prev + 1);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [allFleetsLoaded]);
 
     return (
         <Container maxW="container.lg" p="1.5rem">
             <Flex justifyContent="center">
-                <Box maxWidth="60%">
-                    { fleetsData?.map((vehicle) => (
+                <Box maxWidth="60%" width="100%">
+                    { allFleets && allFleets.map((vehicle) => (
                         <Box mb="2rem">
                             <FleetPost vehicle={vehicle} showUserDetails />
                         </Box>
                     ))}
+                    { loading && <Flex justifyContent="center"><Spinner color="brand" size="md" /></Flex>}
                 </Box>
             </Flex>
         </Container>
     );
 };
 
-const mapStateToProps = (state) => ({
-    allFleets: state.fleet.allFleets,
-    loading: state.fleet.loading,
-    user: state.auth.user,
-});
-
-Home.propTypes = {
-    allFleets: PropTypes.array.isRequired,
-    loading: PropTypes.bool.isRequired,
-    setFleets: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
-};
-
-export default connect(mapStateToProps, { setFleets })(Home);
+export default Home;

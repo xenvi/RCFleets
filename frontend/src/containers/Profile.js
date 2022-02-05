@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, {
+    useState, useEffect, useLayoutEffect, useMemo,
+} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -18,6 +20,7 @@ import {
     TabList,
     TabPanels,
     TabPanel,
+    Spinner,
 } from '@chakra-ui/react';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import { AiOutlineTable } from 'react-icons/ai';
@@ -29,18 +32,52 @@ import { setProfile, unsetProfile } from '../redux/actions/auth';
 import { setFleet } from '../redux/actions/fleet';
 
 const Profile = ({
-    match, user, loading, profile, setProfile, unsetProfile, currentFleet, setFleet,
+    match,
 }) => {
-    const history = useHistory();
+    const allCurrentFleetLoaded = useSelector((state) => state.fleet.allCurrentFleetLoaded);
+    const currentFleet = useSelector((state) => state.fleet.currentFleet);
+    const loading = useSelector((state) => state.auth.loading);
+    const profile = useSelector((state) => state.auth.profile);
+    const user = useSelector((state) => state.auth.user);
+
+    const dispatch = useDispatch();
+
     const [isAuthProfile, setIsAuthProfile] = useState(false);
-    const [error, setError] = useState([]);
+    const [page, setPage] = useState(1);
+
+    const history = useHistory();
     const { handle } = match.params;
 
     useEffect(() => {
-        setProfile(handle);
+        if (profile.length !== 0) {
+            const loadPosts = async () => {
+                await dispatch(setFleet(profile.id, page));
+            };
+
+            loadPosts();
+        }
+    }, [profile, page]);
+
+    useLayoutEffect(() => {
+        const handleScroll = () => {
+            // on scroll to bottom of page, load more posts until end of list
+            if ((window.innerHeight + window.scrollY) === document.body.offsetHeight) {
+                if (!allCurrentFleetLoaded) setPage((prev) => prev + 1);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
 
         return () => {
-            unsetProfile();
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [allCurrentFleetLoaded]);
+
+    useEffect(() => {
+        dispatch(setProfile(handle));
+
+        return () => {
+            dispatch(unsetProfile());
         };
     }, [handle]);
 
@@ -49,15 +86,6 @@ const Profile = ({
             setIsAuthProfile(true);
         }
     }, [user, handle]);
-
-    useEffect(() => {
-        if (Object.keys(profile).length !== 0) {
-            setFleet(profile.id);
-        }
-    }, [profile]);
-
-    // TODO: add loading state and display loader while data loads in
-    // TODO: add error state and display error msg if data fails
 
     const renderSkeletonProfile = () => (
         <SimpleGrid columns={['1', '1', '2']} spacing={10}>
@@ -139,26 +167,13 @@ const Profile = ({
             {
                 renderTabs(currentFleet)
             }
+            { loading && <Flex justifyContent="center"><Spinner color="brand" size="md" /></Flex>}
         </Container>
     );
 };
 
-const mapStateToProps = (state) => ({
-    currentFleet: state.fleet.currentFleet,
-    loading: state.auth.loading,
-    profile: state.auth.profile,
-    user: state.auth.user,
-});
-
 Profile.propTypes = {
-    currentFleet: PropTypes.array.isRequired,
-    loading: PropTypes.bool.isRequired,
     match: PropTypes.object.isRequired,
-    profile: PropTypes.object.isRequired,
-    setFleet: PropTypes.func.isRequired,
-    setProfile: PropTypes.func.isRequired,
-    unsetProfile: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { setProfile, unsetProfile, setFleet })(Profile);
+export default Profile;

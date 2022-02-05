@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Container,
     Box,
@@ -15,7 +14,12 @@ import {
 import { resetPassword } from '../redux/actions/auth';
 import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
-const ResetPassword = ({ resetPassword, error, loading }) => {
+const ResetPassword = () => {
+    const error = useSelector((state) => state.auth.error);
+    const loading = useSelector((state) => state.auth.loading);
+
+    const dispatch = useDispatch();
+
     const [formErrors, setFormErrors] = useState([]);
     const [formData, setFormData] = useState({
         email: '',
@@ -40,7 +44,7 @@ const ResetPassword = ({ resetPassword, error, loading }) => {
         if (!email) {
             setFormErrors(formatFormErrors('email', 'Email is required.'));
         } else {
-            resetPassword(email, history);
+            dispatch(resetPassword(email, history));
         }
     };
 
@@ -78,15 +82,4 @@ const ResetPassword = ({ resetPassword, error, loading }) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    error: state.auth.error,
-    loading: state.auth.loading,
-});
-
-ResetPassword.propTypes = {
-    error: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
-    resetPassword: PropTypes.func.isRequired,
-};
-
-export default connect(mapStateToProps, { resetPassword })(ResetPassword);
+export default ResetPassword;

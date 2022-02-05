@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
     Flex,
@@ -16,17 +16,22 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const Layout = ({
-    children, checkAuthenticated, loadUser, alert, clearErrors, clearAlerts,
+    children,
 }) => {
+    const alert = useSelector((state) => state.auth.alert);
+    const error = useSelector((state) => state.auth.error);
+
+    const dispatch = useDispatch();
+
     const history = useHistory();
     const toast = useToast();
 
     useEffect(() => {
-        checkAuthenticated();
-        loadUser();
+        dispatch(checkAuthenticated());
+        dispatch(loadUser());
         history.listen(() => {
-            clearErrors();
-            clearAlerts();
+            dispatch(clearErrors());
+            dispatch(clearAlerts());
         });
     }, []);
 
@@ -47,20 +52,8 @@ const Layout = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    alert: state.auth.alert,
-    error: state.auth.error,
-});
-
 Layout.propTypes = {
-    alert: PropTypes.string.isRequired,
-    checkAuthenticated: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired,
-    clearAlerts: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired,
-    loadUser: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, {
-    checkAuthenticated, loadUser, clearErrors, clearAlerts,
-})(Layout);
+export default Layout;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, Redirect, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Container,
     Box,
@@ -22,9 +21,13 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { login } from '../redux/actions/auth';
 import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
-const Login = ({
-    login, isAuthenticated, error, loading,
-}) => {
+const Login = () => {
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const error = useSelector((state) => state.auth.error);
+    const loading = useSelector((state) => state.auth.loading);
+
+    const dispatch = useDispatch();
+
     const [formErrors, setFormErrors] = useState([]);
     const [formData, setFormData] = useState({
         email: '',
@@ -54,7 +57,7 @@ const Login = ({
         } else if (!password) {
             setFormErrors(formatFormErrors('password', 'Password is required.'));
         } else {
-            login(email, password, history);
+            dispatch(login(email, password, history));
         }
     };
 
@@ -123,17 +126,4 @@ const Login = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-    error: state.auth.error,
-    loading: state.auth.loading,
-});
-
-Login.propTypes = {
-    error: PropTypes.string.isRequired,
-    isAuthenticated: PropTypes.bool.isRequired,
-    loading: PropTypes.bool.isRequired,
-    login: PropTypes.func.isRequired,
-};
-
-export default connect(mapStateToProps, { login })(Login);
+export default Login;

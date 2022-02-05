@@ -20,6 +20,8 @@ const initialState = {
     allFleets: [],
     currentFleet: [],
     statusSuccess: false,
+    allFleetsLoaded: false,
+    allCurrentFleetLoaded: false,
 };
 
 export default (state = initialState, action) => {
@@ -30,25 +32,25 @@ export default (state = initialState, action) => {
         return {
             ...state,
             loading: false,
-            allFleets: payload,
+            allFleets: [...state.allFleets, ...payload],
         };
     case SET_FLEETS_FAIL:
         return {
             ...state,
             loading: false,
-            allFleets: [],
+            allFleetsLoaded: error?.response?.data?.detail === 'Invalid page.' && true,
         };
     case SET_FLEET_SUCCESS:
         return {
             ...state,
             loading: false,
-            currentFleet: payload,
+            currentFleet: [...state.currentFleet, ...payload],
         };
     case SET_FLEET_FAIL:
         return {
             ...state,
             loading: false,
-            currentFleet: [],
+            allCurrentFleetLoaded: error?.response?.data?.detail === 'Invalid page.' && true,
         };
     case UNSET_FLEET:
         return {
@@ -60,6 +62,8 @@ export default (state = initialState, action) => {
             ...state,
             loading: false,
             statusSuccess: true,
+            allFleets: [payload, ...state.allFleets],
+            currentFleet: [payload, ...state.currentFleet],
         };
     case CREATE_FLEET_POST_FAIL:
         return {
@@ -71,6 +75,8 @@ export default (state = initialState, action) => {
         return {
             ...state,
             statusSuccess: false,
+            error: null,
+            loading: false,
         };
     case UPDATE_FLEET_POST_SUCCESS:
         return {

@@ -19,7 +19,7 @@ import {
 } from '../types';
 import getCookie from '../../util/getCookie';
 
-export const setFleets = () => async (dispatch) => {
+export const setFleets = (page) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const config = {
@@ -29,11 +29,11 @@ export const setFleets = () => async (dispatch) => {
     };
 
     try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets/`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets/?p=${page}`, config);
 
         dispatch({
             type: SET_FLEETS_SUCCESS,
-            payload: res.data,
+            payload: res.data.results,
         });
     } catch (err) {
         dispatch({
@@ -43,7 +43,7 @@ export const setFleets = () => async (dispatch) => {
     }
 };
 
-export const setFleet = (userId) => async (dispatch) => {
+export const setFleet = (userId, page) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const config = {
@@ -53,11 +53,11 @@ export const setFleet = (userId) => async (dispatch) => {
     };
 
     try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets/${userId}`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/fleets/${userId}?p=${page}`, config);
 
         dispatch({
             type: SET_FLEET_SUCCESS,
-            payload: res.data,
+            payload: res.data.results,
         });
     } catch (err) {
         dispatch({
@@ -81,14 +81,12 @@ export const createFleetPost = (fleetData, userId) => async (dispatch) => {
     const body = fleetData;
 
     try {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/fleets/create/`, body, config);
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/fleets/create/`, body, config);
 
         dispatch({
             type: CREATE_FLEET_POST_SUCCESS,
+            payload: res.data,
         });
-
-        dispatch(setFleets());
-        dispatch(setFleet(userId));
     } catch (err) {
         dispatch({
             type: CREATE_FLEET_POST_FAIL,
@@ -121,8 +119,7 @@ export const updateFleetPost = (fleetData, fleetId, userId, method) => async (di
             type: UPDATE_FLEET_POST_SUCCESS,
         });
 
-        dispatch(setFleets());
-        dispatch(setFleet(userId));
+        dispatch(setFleets(1));
     } catch (err) {
         dispatch({
             type: UPDATE_FLEET_POST_FAIL,
@@ -147,9 +144,6 @@ export const deleteFleetPost = (fleetId, userId) => async (dispatch) => {
         dispatch({
             type: DELETE_FLEET_POST_SUCCESS,
         });
-
-        dispatch(setFleets());
-        dispatch(setFleet(userId));
     } catch (err) {
         dispatch({
             type: DELETE_FLEET_POST_FAIL,
