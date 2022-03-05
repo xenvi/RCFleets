@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
     Button,
@@ -39,8 +39,16 @@ import SpeedbumpModal from './SpeedbumpModal';
 import Toast from '../Toast';
 
 const EditModal = ({
-    profile, user, updateFleetPost, loading, error, statusSuccess, resetStatus, vehicleData, onClose, isOpen,
+    vehicleData, onClose, isOpen,
 }) => {
+    const loading = useSelector((state) => state.fleet.loading);
+    const statusSuccess = useSelector((state) => state.fleet.statusSuccess);
+    const error = useSelector((state) => state.fleet.error);
+    const profile = useSelector((state) => state.auth.profile);
+    const user = useSelector((state) => state.auth.user);
+
+    const dispatch = useDispatch();
+
     const toast = useToast();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [values, setValues] = useState({});
@@ -87,7 +95,7 @@ const EditModal = ({
             });
 
             onClose();
-            resetStatus();
+            dispatch(resetStatus());
         }
     }, [statusSuccess]);
 
@@ -246,7 +254,7 @@ const EditModal = ({
             }
         });
 
-        updateFleetPost(formData, vehicleData.id, user.id);
+        dispatch(updateFleetPost(formData, vehicleData.id, user.id));
     };
 
     return (
@@ -299,25 +307,10 @@ const EditModal = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    statusSuccess: state.fleet.statusSuccess,
-    loading: state.fleet.loading,
-    error: state.fleet.error,
-    profile: state.auth.profile,
-    user: state.auth.user,
-});
-
 EditModal.propTypes = {
-    error: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    loading: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired,
-    resetStatus: PropTypes.func.isRequired,
-    statusSuccess: PropTypes.bool.isRequired,
-    updateFleetPost: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
     vehicleData: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { updateFleetPost, resetStatus })(EditModal);
+export default EditModal;

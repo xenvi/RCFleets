@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
     Container,
@@ -19,8 +19,13 @@ import { resetPasswordConfirm } from '../redux/actions/auth';
 import { mapFormErrors, formatFormErrors, renderFormErrors } from '../util/errorHandling';
 
 const ResetPasswordConfirm = ({
-    match, resetPasswordConfirm, error, loading,
+    match,
 }) => {
+    const error = useSelector((state) => state.auth.error);
+    const loading = useSelector((state) => state.auth.loading);
+
+    const dispatch = useDispatch();
+
     const [show, setShow] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [formErrors, setFormErrors] = useState([]);
@@ -53,7 +58,7 @@ const ResetPasswordConfirm = ({
             setFormErrors(formatFormErrors('passwords', 'Passwords must match.'));
         } else {
             const { uid, token } = match.params;
-            resetPasswordConfirm(uid, token, newPassword, reNewPassword, history);
+            dispatch(resetPasswordConfirm(uid, token, newPassword, reNewPassword, history));
         }
     };
 
@@ -116,16 +121,8 @@ const ResetPasswordConfirm = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    error: state.auth.error,
-    loading: state.auth.loading,
-});
-
 ResetPasswordConfirm.propTypes = {
-    error: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
     match: PropTypes.object.isRequired,
-    resetPasswordConfirm: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { resetPasswordConfirm })(ResetPasswordConfirm);
+export default ResetPasswordConfirm;

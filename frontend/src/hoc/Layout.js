@@ -19,7 +19,6 @@ const Layout = ({
     children,
 }) => {
     const alert = useSelector((state) => state.auth.alert);
-    const error = useSelector((state) => state.auth.error);
 
     const dispatch = useDispatch();
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import {
     Flex,
@@ -40,8 +40,12 @@ import EditModal from './modals/EditModal';
 import { deleteFleetPost, updateFleetPost } from '../redux/actions/fleet';
 
 const FleetPost = ({
-    vehicle, isAuthProfile, showUserDetails, deleteFleetPost, user, updateFleetPost,
+    vehicle, isAuthProfile, showUserDetails,
 }) => {
+    const user = useSelector((state) => state.auth.user);
+
+    const dispatch = useDispatch();
+
     const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
@@ -71,7 +75,7 @@ const FleetPost = ({
         formData.append('featured', !featured);
         const method = 'patch';
 
-        updateFleetPost(formData, id, user.id, method);
+        dispatch(updateFleetPost(formData, id, user.id, method));
     };
 
     const renderFeaturedButton = (vehicle) => {
@@ -98,7 +102,7 @@ const FleetPost = ({
     };
 
     const confirmAction = () => {
-        deleteFleetPost(vehicle.id, vehicle.user);
+        dispatch(deleteFleetPost(vehicle.id, vehicle.user));
     };
 
     const mapData = (data) => (
@@ -213,22 +217,15 @@ const FleetPost = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    user: state.auth.user,
-});
-
 FleetPost.defaultProps = {
     isAuthProfile: false,
     showUserDetails: false,
 };
 
 FleetPost.propTypes = {
-    deleteFleetPost: PropTypes.func.isRequired,
     isAuthProfile: PropTypes.bool,
     showUserDetails: PropTypes.bool,
-    updateFleetPost: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
     vehicle: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { deleteFleetPost, updateFleetPost })(FleetPost);
+export default FleetPost;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
     Button,
@@ -38,8 +38,16 @@ import SpeedbumpModal from './SpeedbumpModal';
 import Toast from '../Toast';
 
 const CreateModal = ({
-    profile, user, createFleetPost, loading, error, statusSuccess, resetStatus, onClose, isOpen,
+    onClose, isOpen,
 }) => {
+    const loading = useSelector((state) => state.fleet.loading);
+    const statusSuccess = useSelector((state) => state.fleet.statusSuccess);
+    const error = useSelector((state) => state.fleet.error);
+    const profile = useSelector((state) => state.auth.profile);
+    const user = useSelector((state) => state.auth.user);
+
+    const dispatch = useDispatch();
+
     const toast = useToast();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [values, setValues] = useState({});
@@ -97,7 +105,7 @@ const CreateModal = ({
             });
 
             onClose();
-            resetStatus();
+            dispatch(resetStatus());
         }
     }, [statusSuccess]);
 
@@ -231,7 +239,7 @@ const CreateModal = ({
             }
         });
 
-        createFleetPost(formData, user.id);
+        dispatch(createFleetPost(formData, user.id));
     };
 
     return (
@@ -283,24 +291,9 @@ const CreateModal = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    statusSuccess: state.fleet.statusSuccess,
-    loading: state.fleet.loading,
-    error: state.fleet.error,
-    profile: state.auth.profile,
-    user: state.auth.user,
-});
-
 CreateModal.propTypes = {
-    createFleetPost: PropTypes.func.isRequired,
-    error: PropTypes.string.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    loading: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    profile: PropTypes.object.isRequired,
-    resetStatus: PropTypes.func.isRequired,
-    statusSuccess: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { createFleetPost, resetStatus })(CreateModal);
+export default CreateModal;

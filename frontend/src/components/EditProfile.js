@@ -1,7 +1,7 @@
 import React, {
     useState, useEffect, useCallback,
 } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
     Button,
@@ -23,8 +23,14 @@ import ProfileAvatar from './Avatar';
 import Toast from './Toast';
 
 const EditProfile = ({
-    updateProfile, loading, error, statusSuccess, resetStatus, profileData,
+    profileData,
 }) => {
+    const loading = useSelector((state) => state.auth.loading);
+    const statusSuccess = useSelector((state) => state.auth.statusSuccess);
+    const error = useSelector((state) => state.auth.error);
+
+    const dispatch = useDispatch();
+
     const toast = useToast();
     const [values, setValues] = useState({});
     const [avatarFile, setAvatarFile] = useState([]);
@@ -59,7 +65,7 @@ const EditProfile = ({
                 render: () => (<Toast color="light" bgColor="green.400" text="Profile saved." />),
                 duration: 4000,
             });
-            resetStatus();
+            dispatch(resetStatus());
         }
     }, [statusSuccess]);
 
@@ -70,7 +76,7 @@ const EditProfile = ({
                 render: () => (<Toast color="light" bgColor="brand.500" text="Oops! Something went wrong." />),
                 duration: 5000,
             });
-            resetStatus();
+            dispatch(resetStatus());
         }
     }, [error]);
 
@@ -144,7 +150,7 @@ const EditProfile = ({
             }
         });
 
-        updateProfile(formData, profileData.id, profileData.handle);
+        dispatch(updateProfile(formData, profileData.id, profileData.handle));
     };
 
     return (
@@ -179,21 +185,8 @@ const EditProfile = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    statusSuccess: state.auth.statusSuccess,
-    loading: state.auth.loading,
-    error: state.auth.error,
-    user: state.auth.user,
-});
-
 EditProfile.propTypes = {
-    error: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
     profileData: PropTypes.object.isRequired,
-    resetStatus: PropTypes.func.isRequired,
-    statusSuccess: PropTypes.bool.isRequired,
-    updateProfile: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { updateProfile, resetStatus })(EditProfile);
+export default EditProfile;

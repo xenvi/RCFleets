@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     chakra,
     Container,
@@ -31,14 +31,16 @@ import {
     MoonIcon, SunIcon, HamburgerIcon, SettingsIcon, PlusSquareIcon,
 } from '@chakra-ui/icons';
 import { AiOutlineUser, AiTwotoneThunderbolt } from 'react-icons/ai';
-import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth';
 import CreateModal from './modals/CreateModal';
 import ProfileAvatar from './Avatar';
 
-const Navbar = ({
-    logout, isAuthenticated, user,
-}) => {
+const Navbar = () => {
+    const user = useSelector((state) => state.auth.user);
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+    const dispatch = useDispatch();
+
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: createModalIsOpen, onOpen: createModalOnOpen, onClose: createModalOnClose } = useDisclosure();
@@ -46,7 +48,7 @@ const Navbar = ({
     const history = useHistory();
 
     const handleLogout = () => {
-        logout(history);
+        dispatch(logout(history));
         return isOpen && onClose();
     };
 
@@ -191,15 +193,4 @@ const Navbar = ({
     );
 };
 
-const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated,
-    user: state.auth.user,
-});
-
-Navbar.propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired,
-    logout: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
-};
-
-export default connect(mapStateToProps, { logout })(Navbar);
+export default Navbar;
