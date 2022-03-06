@@ -252,8 +252,10 @@ const CreateModal = ({
               onClose={onCloseSpeedbump}
             />
 
-            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
-                <ModalOverlay />
+            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus scrollBehavior="inside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
+                <ModalOverlay
+                  backdropFilter="blur(10px)"
+                />
                 <ModalContent>
                     <ModalHeader>Create Fleet Post</ModalHeader>
                     <ModalCloseButton />

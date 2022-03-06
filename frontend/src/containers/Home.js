@@ -1,5 +1,5 @@
 import React, {
-    useState, useEffect, useLayoutEffect,
+    useState, useEffect, useLayoutEffect, useCallback,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -21,14 +21,12 @@ const Home = () => {
 
     const [page, setPage] = useState(1);
 
-    console.log('allFleets', allFleets);
+    const loadPosts = useCallback(async (page) => {
+        dispatch(setFleets(page));
+    }, []);
 
     useEffect(() => {
-        const loadPosts = async () => {
-            await dispatch(setFleets(page));
-        };
-
-        loadPosts();
+        loadPosts(page);
     }, [page]);
 
     useLayoutEffect(() => {

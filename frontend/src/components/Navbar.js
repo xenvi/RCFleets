@@ -144,7 +144,7 @@ const Navbar = () => {
             <Container maxW="container.lg">
                 <Flex flexWrap="wrap" w="100%" pt="1rem" pb="1rem">
                     <Box>
-                        <Link as={RouterLink} to="/">
+                        <Link as={RouterLink} to="/" onClick={() => window.scrollTo(0, 0)}>
                             <Heading
                               as="h6"
                               display="flex"

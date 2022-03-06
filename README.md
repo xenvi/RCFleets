@@ -21,6 +21,13 @@ Folder structure:
     -  redux: folder for state management
     -  util: folder for util functions and database schemas
 
+# MVP
+- fix bug: refreshing on user page fails to fetch fleet
+- fix token session to last 1 day
+- add remember me functionality
+- image cdn
+- hosting
+- logo!
 
 # Short Term TODO
 - ~~Add Home page (recent card posts)~~

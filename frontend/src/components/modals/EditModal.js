@@ -267,8 +267,10 @@ const EditModal = ({
               onClose={onCloseSpeedbump}
             />
 
-            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="outside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
-                <ModalOverlay />
+            <Modal onClose={onClose} isOpen={isOpen} size="xl" autoFocus isCentered scrollBehavior="inside" closeOnOverlayClick={false} onOverlayClick={onOpenSpeedbump}>
+                <ModalOverlay
+                  backdropFilter="blur(10px)"
+                />
                 <ModalContent>
                     { loading && <Progress size="xs" isIndeterminate colorScheme="brand" /> }
                     <ModalHeader>Edit Fleet Post</ModalHeader>

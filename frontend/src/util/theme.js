@@ -29,7 +29,18 @@ const theme = extendTheme({
             800: '#20252f',
             900: '#050c17',
         },
-        light: '#F8F7F9',
+        light: {
+            50: '#F8F7F9',
+            100: '#d7d4da',
+            200: '#bdb7c2',
+            300: '#a39bac',
+            400: '#897e95',
+            500: '#70647c',
+            600: '#574f60',
+            700: '#3e3844',
+            800: '#252229',
+            900: '#0d0b0f',
+        },
         tan: '#DAD2BC',
         brown: '#A99985',
         brand:
@@ -50,14 +61,30 @@ const theme = extendTheme({
         global: (props) => ({
             body: {
                 fontFamily: 'body',
-                color: mode('dark.700', 'light')(props),
-                bg: mode('light', 'dark.800')(props),
+                color: mode('dark.700', 'light.50')(props),
+                bg: mode('light.50', 'dark.800')(props),
                 lineHeight: 'base',
             },
             a: {
                 _hover: {
                     textDecoration: 'none !important',
                 },
+            },
+            '::-webkit-scrollbar': {
+                width: '8px',
+            },
+            '::-webkit-scrollbar-track': {
+                background: mode('rgba(0,0,0,0.15)', 'rgba(255,255,255,0.15)')(props),
+            },
+            '::-webkit-scrollbar-thumb': {
+                background: mode('slateGray.300', 'dark.300')(props),
+                borderRadius: '20px',
+            },
+            '::-webkit-scrollbar-thumb:hover': {
+                background: mode('slateGray.400', 'dark.400')(props),
+            },
+            '::-webkit-scrollbar-thumb:active': {
+                background: mode('slateGray.500', 'dark.500')(props),
             },
         }),
     },
@@ -73,10 +100,10 @@ const theme = extendTheme({
                 brand: {
                     fontWeight: 'bold',
                     lineHeight: '0',
-                    color: 'light',
+                    color: 'light.50',
                     backgroundColor: 'brand.500',
                     _hover: {
-                        color: 'light',
+                        color: 'light.50',
                         backgroundColor: 'brand.600',
                     },
                     _loading: {
@@ -160,7 +187,7 @@ const theme = extendTheme({
         Container: {
             variants: {
                 nav: (props) => ({
-                    backgroundColor: mode('light', 'dark.800')(props),
+                    backgroundColor: mode('light.50', 'dark.800')(props),
                     zIndex: 999,
                     position: 'sticky',
                     top: '0',
@@ -170,8 +197,8 @@ const theme = extendTheme({
         Drawer: {
             baseStyle: (props) => ({
                 dialog: {
-                    color: mode('dark.800', 'light')(props),
-                    backgroundColor: mode('light', 'dark.800')(props),
+                    color: mode('dark.800', 'light.50')(props),
+                    backgroundColor: mode('light.50', 'dark.800')(props),
                 },
                 closeButton: {
                     borderRadius: '50% 25%',
