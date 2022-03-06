@@ -50,6 +50,7 @@ const FleetPost = ({
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenSpeedbump, onOpen: onOpenSpeedbump, onClose: onCloseSpeedbump } = useDisclosure();
     const [postProfile, setPostProfile] = useState({});
+    const [setError] = useState({});
 
     useEffect(async () => {
         if (showUserDetails) {
@@ -62,8 +63,8 @@ const FleetPost = ({
             try {
                 const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${vehicle.handle}`, config);
                 setPostProfile(res.data);
-            } catch {
-                console.log('err post profile');
+            } catch (err) {
+                setError(err);
             }
         }
     }, []);
