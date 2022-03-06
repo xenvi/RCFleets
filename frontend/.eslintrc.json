@@ -1,24 +1,24 @@
 {
     "extends": "airbnb",
     "rules": {
+        "array-callback-return": "off",
+        "consistent-return": "off",
         "import/no-extraneous-dependencies": ["warn", { "devDependencies": true }],
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "max-len": ["error", {"code": 160, "ignoreComments": true, "ignoreTemplateLiterals": true, "ignoreStrings": true, "ignoreUrls": true}],
         "indent" : ["error", 4, { "ignoredNodes": ["JSXElement *"] }],
-        "react/jsx-indent": ["error", 4],
         "linebreak-style": "off",
-        "react/prop-types": "warn",
-        "react/sort-prop-types": "warn",
-        "react/no-unused-prop-types": "warn",
-        "no-undef": "warn",
+        "max-len": ["error", {"code": 160, "ignoreComments": true, "ignoreTemplateLiterals": true, "ignoreStrings": true, "ignoreUrls": true}],
+        "no-param-reassign": "off",
+        "no-plusplus": "off",
         "no-shadow": "off",
+        "no-undef": "warn",
         "no-unused-vars": "warn",
         "react/forbid-prop-types": "off",
-        "consistent-return": "off",
-        "array-callback-return": "off",
-        "no-plusplus": "off",
-        "no-param-reassign": "warn",
-        "react/jsx-props-no-spreading": "warn"
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-props-no-spreading": "off",
+        "react/no-unused-prop-types": "warn",
+        "react/prop-types": "warn",
+        "react/sort-prop-types": "warn"
     },
     "parserOptions": {
       "ecmaVersion": 2020

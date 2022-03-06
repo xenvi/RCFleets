@@ -11,9 +11,6 @@ import {
     UPDATE_FLEET_POST_FAIL,
     DELETE_FLEET_POST_SUCCESS,
     DELETE_FLEET_POST_FAIL,
-    ALERT_SUCCESS,
-    CLEAR_ALERTS,
-    CLEAR_ERRORS,
     LOADING_FLEET,
     RESET_STATUS,
 } from '../types';
@@ -67,7 +64,7 @@ export const setFleet = (userId, page) => async (dispatch) => {
     }
 };
 
-export const createFleetPost = (fleetData, userId) => async (dispatch) => {
+export const createFleetPost = (fleetData) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const csrftoken = getCookie('csrftoken');
@@ -95,7 +92,7 @@ export const createFleetPost = (fleetData, userId) => async (dispatch) => {
     }
 };
 
-export const updateFleetPost = (fleetData, fleetId, userId, method) => async (dispatch) => {
+export const updateFleetPost = (fleetData, fleetId, method) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const csrftoken = getCookie('csrftoken');
@@ -128,7 +125,7 @@ export const updateFleetPost = (fleetData, fleetId, userId, method) => async (di
     }
 };
 
-export const deleteFleetPost = (fleetId, userId) => async (dispatch) => {
+export const deleteFleetPost = (fleetId) => async (dispatch) => {
     dispatch({ type: LOADING_FLEET });
 
     const csrftoken = getCookie('csrftoken');

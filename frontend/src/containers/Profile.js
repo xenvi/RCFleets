@@ -1,5 +1,5 @@
 import React, {
-    useState, useEffect, useLayoutEffect, useMemo,
+    useState, useEffect, useLayoutEffect, useCallback,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -48,13 +48,13 @@ const Profile = ({
     const history = useHistory();
     const { handle } = match.params;
 
-    useEffect(() => {
-        if (profile.length !== 0) {
-            const loadPosts = async () => {
-                await dispatch(setFleet(profile.id, page));
-            };
+    const loadPosts = useCallback(async (id, page) => {
+        dispatch(setFleet(id, page));
+    }, []);
 
-            loadPosts();
+    useEffect(() => {
+        if (profile.length !== 0 && profile.id) {
+            loadPosts(profile.id, page);
         }
     }, [profile, page]);
 
@@ -86,6 +86,8 @@ const Profile = ({
             setIsAuthProfile(true);
         }
     }, [user, handle]);
+
+    useEffect(() => () => { setPage(1); });
 
     const renderSkeletonProfile = () => (
         <SimpleGrid columns={['1', '1', '2']} spacing={10}>

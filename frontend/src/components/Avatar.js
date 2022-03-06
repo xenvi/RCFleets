@@ -44,13 +44,14 @@ const ProfileAvatar = ({
 };
 
 ProfileAvatar.defaultProps = {
-    name: null,
     marginRight: ['0.5rem', '1rem'],
+    name: null,
 };
 
 ProfileAvatar.propTypes = {
     marginRight: PropTypes.array,
     name: PropTypes.string,
+    onClick: PropTypes.func.isRequired,
     size: PropTypes.string.isRequired,
     src: PropTypes.string.isRequired,
 };
