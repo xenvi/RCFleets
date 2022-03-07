@@ -2,19 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, Redirect, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-    Container,
     Box,
-    Flex,
-    Stack,
-    FormControl,
-    Input,
-    InputRightElement,
-    InputGroup,
-    Heading,
-    Text,
-    Link,
-    Divider,
     Button,
+    Checkbox,
+    Container,
+    Divider,
+    Flex,
+    FormControl,
+    Heading,
+    Input,
+    InputGroup,
+    InputRightElement,
+    Link,
+    Stack,
+    Text,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
@@ -32,10 +33,11 @@ const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
+        rememberMe: false,
     });
     const [show, setShow] = useState(false);
 
-    const { email, password } = formData;
+    const { email, password, rememberMe } = formData;
     const history = useHistory();
 
     useEffect(() => {
@@ -47,7 +49,7 @@ const Login = () => {
     }, [error]);
 
     const onChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.checked || e.target.value });
     };
     const onSubmit = (e) => {
         e.preventDefault();
@@ -57,7 +59,7 @@ const Login = () => {
         } else if (!password) {
             setFormErrors(formatFormErrors('password', 'Password is required.'));
         } else {
-            dispatch(login(email, password, history));
+            dispatch(login(email, password, history, rememberMe));
         }
     };
 
@@ -109,6 +111,17 @@ const Login = () => {
                             <Button variant="brand" type="submit" isLoading={loading} isFullWidth>
                                 Log In
                             </Button>
+
+                            <Text mt="1rem" display="flex" align="center">
+                                <Checkbox
+                                  colorScheme="brand"
+                                  size="lg"
+                                  value={rememberMe}
+                                  name="rememberMe"
+                                  onChange={(e) => onChange(e)}
+                                />
+                                <Text ml="0.5rem">Remember Me</Text>
+                            </Text>
                         </Stack>
                     </form>
 
